@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd">
+
+    <!-- Settings Panel -->
+    <engine:VisualElement name="settings-root" class="overlay">
+
+        <engine:VisualElement name="settings-panel" class="panel settings-panel">
+
+            <!-- Header -->
+            <engine:VisualElement class="settings-header">
+                <engine:Button name="settings-back-btn" class="btn btn-secondary settings-back-btn" text="Back" />
+                <engine:Label class="popup-title" text="Settings" />
+                <engine:VisualElement class="settings-header-spacer" />
+            </engine:VisualElement>
+
+            <engine:VisualElement class="popup-divider" />
+
+            <!-- Scrollable Settings Content -->
+            <engine:ScrollView name="settings-scroll" class="settings-scroll" mode="Vertical">
+
+                <!-- Audio Section -->
+                <engine:Label class="settings-section-title" text="Audio" />
+
+                <engine:VisualElement class="slider-row">
+                    <engine:Label class="slider-label" text="Master Volume" />
+                    <engine:Slider name="master-volume" class="slider"
+                        low-value="0" high-value="100" value="80" />
+                    <engine:Label name="master-volume-value" class="slider-value-label" text="80" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="slider-row">
+                    <engine:Label class="slider-label" text="Music Volume" />
+                    <engine:Slider name="music-volume" class="slider"
+                        low-value="0" high-value="100" value="70" />
+                    <engine:Label name="music-volume-value" class="slider-value-label" text="70" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="slider-row">
+                    <engine:Label class="slider-label" text="SFX Volume" />
+                    <engine:Slider name="sfx-volume" class="slider"
+                        low-value="0" high-value="100" value="90" />
+                    <engine:Label name="sfx-volume-value" class="slider-value-label" text="90" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="settings-section-divider" />
+
+                <!-- Gameplay Section -->
+                <engine:Label class="settings-section-title" text="Gameplay" />
+
+                <engine:VisualElement class="toggle-row">
+                    <engine:Label class="toggle-label" text="Screen Shake" />
+                    <engine:Toggle name="screen-shake-toggle" class="toggle" value="true" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="settings-section-divider" />
+
+                <!-- Graphics Section -->
+                <engine:Label class="settings-section-title" text="Graphics" />
+
+                <engine:VisualElement class="dropdown-row">
+                    <engine:Label class="dropdown-label" text="Quality" />
+                    <engine:DropdownField name="quality-dropdown" class="dropdown"
+                        choices="Low,Medium,High" index="1" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="settings-section-divider" />
+
+                <!-- Danger Zone -->
+                <engine:Label class="settings-section-title settings-section-title--danger" text="Danger Zone" />
+
+                <engine:Button name="reset-progress-btn" class="btn btn-danger btn-wide" text="Reset All Progress" />
+
+            </engine:ScrollView>
+
+        </engine:VisualElement>
+
+        <!-- Confirmation Dialog (hidden by default) -->
+        <engine:VisualElement name="confirm-dialog" class="overlay confirm-overlay" style="display: none;">
+            <engine:VisualElement class="panel confirm-panel">
+                <engine:Label class="confirm-title" text="Are you sure?" />
+                <engine:Label class="confirm-message" text="This will permanently delete all your progress. This action cannot be undone." />
+                <engine:VisualElement class="popup-buttons">
+                    <engine:Button name="confirm-no-btn" class="btn btn-secondary" text="No, Keep My Data" />
+                    <engine:Button name="confirm-yes-btn" class="btn btn-danger" text="Yes, Reset Everything" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+        </engine:VisualElement>
+
+    </engine:VisualElement>
+
+</engine:UXML>

@@ -1,23 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using ElementalSiege.Elements;
+using ElementalSiege.Orbs;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Launcher
 {
-    /// <summary>
-    /// Enumerates the elemental types available for orbs.
-    /// </summary>
-    public enum ElementType
-    {
-        Fire,
-        Ice,
-        Lightning,
-        Earth,
-        Wind,
-        Water,
-        Void
-    }
-
     /// <summary>
     /// Manages the queue of elemental orbs for the current level.
     /// Reads the orb list from level data, spawns orb prefabs, and feeds them to the catapult.
@@ -27,7 +16,7 @@ namespace ElementalSiege.Launcher
         #region Events
 
         /// <summary>Fired when the active orb type changes (next orb loaded onto catapult).</summary>
-        public event Action<ElementType> OnOrbChanged;
+        public event Action<ElementCategory> OnOrbChanged;
 
         /// <summary>Fired when no orbs remain in the queue.</summary>
         public event Action OnOrbsEmpty;
@@ -59,7 +48,7 @@ namespace ElementalSiege.Launcher
 
         #region Private State
 
-        private readonly Queue<ElementType> _orbQueue = new Queue<ElementType>();
+        private readonly Queue<ElementCategory> _orbQueue = new Queue<ElementCategory>();
         private OrbBase _currentOrb;
         private bool _isLoading;
 
@@ -77,7 +66,7 @@ namespace ElementalSiege.Launcher
         public bool HasOrbs => _orbQueue.Count > 0 || _currentOrb != null;
 
         /// <summary>The element type of the currently loaded orb, or null if none.</summary>
-        public ElementType? CurrentElementType { get; private set; }
+        public ElementCategory? CurrentElementType { get; private set; }
 
         #endregion
 
@@ -108,7 +97,7 @@ namespace ElementalSiege.Launcher
         /// Call this at the start of a level.
         /// </summary>
         /// <param name="orbs">Ordered list of element types for the level.</param>
-        public void LoadOrbs(List<ElementType> orbs)
+        public void LoadOrbs(List<ElementCategory> orbs)
         {
             if (orbs == null || orbs.Count == 0)
             {
@@ -118,7 +107,7 @@ namespace ElementalSiege.Launcher
             }
 
             _orbQueue.Clear();
-            foreach (ElementType element in orbs)
+            foreach (ElementCategory element in orbs)
             {
                 _orbQueue.Enqueue(element);
             }
@@ -139,7 +128,7 @@ namespace ElementalSiege.Launcher
                 return null;
             }
 
-            ElementType element = _orbQueue.Dequeue();
+            ElementCategory element = _orbQueue.Dequeue();
             OrbBase orb = SpawnOrb(element);
 
             CurrentElementType = element;
@@ -153,7 +142,7 @@ namespace ElementalSiege.Launcher
         /// Returns null if the queue is empty.
         /// </summary>
         /// <returns>The next ElementType, or null if empty.</returns>
-        public ElementType? PeekNextOrb()
+        public ElementCategory? PeekNextOrb()
         {
             if (_orbQueue.Count == 0)
                 return null;
@@ -193,7 +182,7 @@ namespace ElementalSiege.Launcher
             _catapult.LoadOrb(orb);
         }
 
-        private OrbBase SpawnOrb(ElementType element)
+        private OrbBase SpawnOrb(ElementCategory element)
         {
             int prefabIndex = (int)element;
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using ElementalSiege.Orbs;
 
 namespace ElementalSiege.Structures
 {
@@ -9,7 +10,7 @@ namespace ElementalSiege.Structures
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     [DisallowMultipleComponent]
-    public class WindAffected : MonoBehaviour
+    public class WindAffected : MonoBehaviour, IWindAffectable
     {
         #region Serialized Fields
 

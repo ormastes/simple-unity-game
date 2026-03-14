@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ElementalSiege.Elements;
+using ElementalSiege.Orbs;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Structures
 {
@@ -11,7 +14,7 @@ namespace ElementalSiege.Structures
     /// </summary>
     [RequireComponent(typeof(StructureHealth))]
     [DisallowMultipleComponent]
-    public class Flammable : MonoBehaviour
+    public class Flammable : MonoBehaviour, IFlammable
     {
         #region Serialized Fields
 
@@ -121,6 +124,19 @@ namespace ElementalSiege.Structures
         #region Public Methods
 
         /// <summary>
+        /// Implements IFlammable.Ignite with full parameters from the orb system.
+        /// Delegates to the simpler Ignite() overload after applying orb-provided settings.
+        /// </summary>
+        public void Ignite(float duration, float damagePerSecond, float spreadDelay,
+            float spreadRadius, GameObject burningEffectPrefab)
+        {
+            this.burnRate = damagePerSecond;
+            this.spreadDelay = spreadDelay;
+            this.spreadRadius = spreadRadius;
+            Ignite();
+        }
+
+        /// <summary>
         /// Ignites this structure. Has no effect if already on fire or if the structure is dead.
         /// </summary>
         public void Ignite()
@@ -198,7 +214,7 @@ namespace ElementalSiege.Structures
             while (IsOnFire && healthComponent != null && !healthComponent.IsDead)
             {
                 // Drain health
-                healthComponent.TakeElementalDamage(burnRate * Time.deltaTime, ElementType.Fire);
+                healthComponent.TakeElementalDamage(burnRate * Time.deltaTime, ElementCategory.Fire);
 
                 // Weaken joints
                 WeakenJoints();

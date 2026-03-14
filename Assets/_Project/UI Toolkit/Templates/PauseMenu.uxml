@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd">
+
+    <!-- Pause Menu Overlay -->
+    <engine:VisualElement name="pause-root" class="overlay">
+
+        <!-- Center Panel -->
+        <engine:VisualElement name="pause-panel" class="panel popup-panel">
+
+            <!-- Title -->
+            <engine:Label name="pause-title" class="popup-title" text="PAUSED" />
+
+            <!-- Divider -->
+            <engine:VisualElement class="popup-divider" />
+
+            <!-- Main Buttons -->
+            <engine:VisualElement name="pause-buttons" class="pause-button-stack">
+                <engine:Button name="resume-btn" class="btn btn-primary btn-wide" text="Resume" />
+                <engine:Button name="restart-btn" class="btn btn-secondary btn-wide" text="Restart" />
+                <engine:Button name="settings-btn" class="btn btn-secondary btn-wide" text="Settings" />
+                <engine:Button name="quit-btn" class="btn btn-danger btn-wide" text="Quit to Map" />
+            </engine:VisualElement>
+
+            <!-- Settings Sub-Panel (hidden by default) -->
+            <engine:VisualElement name="pause-settings-panel" class="pause-settings-panel" style="display: none;">
+
+                <engine:Label class="settings-section-title" text="Audio" />
+
+                <engine:VisualElement class="slider-row">
+                    <engine:Label class="slider-label" text="Master Volume" />
+                    <engine:Slider name="master-volume-slider" class="slider"
+                        low-value="0" high-value="100" value="80" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="slider-row">
+                    <engine:Label class="slider-label" text="Music Volume" />
+                    <engine:Slider name="music-volume-slider" class="slider"
+                        low-value="0" high-value="100" value="70" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="slider-row">
+                    <engine:Label class="slider-label" text="SFX Volume" />
+                    <engine:Slider name="sfx-volume-slider" class="slider"
+                        low-value="0" high-value="100" value="90" />
+                </engine:VisualElement>
+
+                <engine:Button name="settings-back-btn" class="btn btn-secondary" text="Back" />
+
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+
+    </engine:VisualElement>
+
+</engine:UXML>

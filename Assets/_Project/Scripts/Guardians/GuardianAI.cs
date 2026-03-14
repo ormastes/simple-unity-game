@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using ElementalSiege.Core;
 
 namespace ElementalSiege.Guardians
 {

@@ -1,0 +1,19 @@
+{
+    "name": "ElementalSiege.Guardians",
+    "rootNamespace": "ElementalSiege.Guardians",
+    "references": [
+        "ElementalSiege.Utilities",
+        "ElementalSiege.Core",
+        "ElementalSiege.Elements",
+        "ElementalSiege.Structures"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

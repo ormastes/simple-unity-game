@@ -1,0 +1,19 @@
+{
+    "name": "ElementalSiege.VFX",
+    "rootNamespace": "ElementalSiege.VFX",
+    "references": [
+        "ElementalSiege.Utilities",
+        "ElementalSiege.Core",
+        "ElementalSiege.Elements",
+        "ElementalSiege.Camera"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

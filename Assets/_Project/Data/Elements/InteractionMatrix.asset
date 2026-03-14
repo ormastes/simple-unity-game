@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d4e5f6a7b8c9d0e1f2a3b4c5d6a7b8, type: 3}
+  m_Name: InteractionMatrix
+  m_EditorClassIdentifier:
+  interactions:
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000002, type: 2}
+    elementB: {fileID: 11400000, guid: 00000000000000000000000000000003, type: 2}
+    resultName: Steam
+    damageMultiplier: 2
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000002, type: 2}
+    elementB: {fileID: 11400000, guid: 00000000000000000000000000000005, type: 2}
+    resultName: Firestorm
+    damageMultiplier: 1.8
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000003, type: 2}
+    elementB: {fileID: 11400000, guid: 00000000000000000000000000000004, type: 2}
+    resultName: Shatter
+    damageMultiplier: 2.5
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000009, type: 2}
+    elementB: {fileID: 11400000, guid: 00000000000000000000000000000004, type: 2}
+    resultName: Shock
+    damageMultiplier: 2
+    isAreaDamage: 1
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000005, type: 2}
+    elementB: {fileID: 11400000, guid: 00000000000000000000000000000002, type: 2}
+    resultName: Firestorm
+    damageMultiplier: 1.8
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000006, type: 2}
+    elementB: {fileID: 11400000, guid: 00000000000000000000000000000004, type: 2}
+    resultName: Prismatic Bolt
+    damageMultiplier: 1.5
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000007, type: 2}
+    elementB: {fileID: 11400000, guid: 00000000000000000000000000000005, type: 2}
+    resultName: Vortex
+    damageMultiplier: 1.5
+  - elementA: {fileID: 11400000, guid: 00000000000000000000000000000008, type: 2}
+    elementB: {fileID: 0}
+    resultName: Absorption
+    damageMultiplier: 1
+    copiesElement: 1

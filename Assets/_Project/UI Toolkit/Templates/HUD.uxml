@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd">
+
+    <!-- In-Game Heads-Up Display -->
+    <engine:VisualElement name="hud-root" class="hud-root">
+
+        <!-- Top Bar -->
+        <engine:VisualElement name="top-bar" class="hud-top-bar">
+
+            <!-- Top-Left: Orb Queue -->
+            <engine:VisualElement name="orb-queue" class="orb-queue">
+                <engine:VisualElement name="orb-0" class="orb-icon orb-icon--active" />
+                <engine:VisualElement name="orb-1" class="orb-icon" />
+                <engine:VisualElement name="orb-2" class="orb-icon" />
+                <engine:VisualElement name="orb-3" class="orb-icon" />
+                <engine:VisualElement name="orb-4" class="orb-icon" />
+            </engine:VisualElement>
+
+            <!-- Top-Center: Score Display -->
+            <engine:VisualElement name="score-container" class="score-container">
+                <engine:Label name="score-label" class="score-label" text="SCORE" />
+                <engine:Label name="score-value" class="score-text" text="0" />
+            </engine:VisualElement>
+
+            <!-- Top-Right: Pause Button -->
+            <engine:Button name="pause-btn" class="pause-btn">
+                <engine:VisualElement class="pause-btn__icon" />
+            </engine:Button>
+
+        </engine:VisualElement>
+
+        <!-- Center-Right: Element Info -->
+        <engine:VisualElement name="element-info" class="element-info">
+            <engine:Label name="element-name" class="element-name" text="Fire" />
+            <engine:Label name="ability-hint" class="ability-hint" text="Tap to ignite on impact" />
+        </engine:VisualElement>
+
+        <!-- Bottom: Destruction Bar -->
+        <engine:VisualElement name="destruction-container" class="destruction-container">
+            <engine:Label name="destruction-label" class="destruction-label" text="DESTRUCTION" />
+            <engine:VisualElement name="destruction-bar" class="destruction-bar">
+                <engine:VisualElement name="destruction-fill" class="destruction-bar__fill" />
+            </engine:VisualElement>
+            <engine:Label name="destruction-percent" class="destruction-percent" text="0%" />
+        </engine:VisualElement>
+
+    </engine:VisualElement>
+
+</engine:UXML>

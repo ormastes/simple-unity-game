@@ -1,0 +1,256 @@
+/* ==========================================================================
+   Elemental Siege — HUD Styles
+   In-game heads-up display: orb queue, score, pause, destruction bar.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root Layout
+   -------------------------------------------------------------------------- */
+.hud-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 16px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* --------------------------------------------------------------------------
+   Top Bar
+   -------------------------------------------------------------------------- */
+.hud-top-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Orb Queue (Top-Left)
+   -------------------------------------------------------------------------- */
+.orb-queue {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(13, 27, 42, 0.75);
+    border-radius: 32px;
+    border-width: 1px;
+    border-color: rgba(212, 160, 41, 0.4);
+}
+
+.orb-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    border-width: 2px;
+    border-color: rgba(240, 230, 211, 0.4);
+    background-color: rgba(240, 230, 211, 0.1);
+    margin-right: 8px;
+    transition-property: width, height, border-color, background-color;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+}
+
+.orb-icon:last-child {
+    margin-right: 0;
+}
+
+.orb-icon--active {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    border-width: 3px;
+    border-color: #D4A029;
+    background-color: rgba(212, 160, 41, 0.25);
+    /* Glow effect via shadow */
+    -unity-background-image-tint-color: #D4A029;
+}
+
+/* Element-specific orb colors */
+.orb-icon--fire {
+    background-color: rgba(232, 93, 58, 0.3);
+    border-color: #E85D3A;
+}
+
+.orb-icon--water {
+    background-color: rgba(58, 143, 232, 0.3);
+    border-color: #3A8FE8;
+}
+
+.orb-icon--earth {
+    background-color: rgba(139, 111, 71, 0.3);
+    border-color: #8B6F47;
+}
+
+.orb-icon--wind {
+    background-color: rgba(168, 216, 185, 0.3);
+    border-color: #A8D8B9;
+}
+
+.orb-icon--lightning {
+    background-color: rgba(240, 201, 64, 0.3);
+    border-color: #F0C940;
+}
+
+.orb-icon--ice {
+    background-color: rgba(168, 224, 240, 0.3);
+    border-color: #A8E0F0;
+}
+
+.orb-icon--shadow {
+    background-color: rgba(107, 63, 160, 0.3);
+    border-color: #6B3FA0;
+}
+
+.orb-icon--arcane {
+    background-color: rgba(212, 74, 232, 0.3);
+    border-color: #D44AE8;
+}
+
+/* --------------------------------------------------------------------------
+   Score Display (Top-Center)
+   -------------------------------------------------------------------------- */
+.score-container {
+    align-items: center;
+    padding: 8px 24px;
+    background-color: rgba(13, 27, 42, 0.75);
+    border-radius: 12px;
+    border-width: 1px;
+    border-color: rgba(212, 160, 41, 0.4);
+}
+
+.score-label {
+    font-size: 12px;
+    color: rgba(240, 230, 211, 0.6);
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+}
+
+.score-text {
+    font-size: 36px;
+    color: #D4A029;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   Pause Button (Top-Right)
+   -------------------------------------------------------------------------- */
+.pause-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background-color: rgba(13, 27, 42, 0.75);
+    border-width: 2px;
+    border-color: rgba(212, 160, 41, 0.4);
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    transition-property: background-color, border-color;
+    transition-duration: 0.15s;
+}
+
+.pause-btn:hover {
+    background-color: rgba(26, 58, 92, 0.9);
+    border-color: #D4A029;
+}
+
+.pause-btn__icon {
+    width: 20px;
+    height: 20px;
+    background-color: #D4A029;
+    border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Element Info (Center-Right)
+   -------------------------------------------------------------------------- */
+.element-info {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    margin-top: -40px;
+    align-items: flex-end;
+    padding: 12px 16px;
+    background-color: rgba(13, 27, 42, 0.65);
+    border-radius: 12px;
+    border-width: 1px;
+    border-color: rgba(212, 160, 41, 0.3);
+}
+
+.element-name {
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: #D4A029;
+    margin-bottom: 4px;
+}
+
+.ability-hint {
+    font-size: 14px;
+    color: rgba(240, 230, 211, 0.7);
+    -unity-font-style: italic;
+}
+
+/* Element-specific name colors */
+.element-name--fire { color: #E85D3A; }
+.element-name--water { color: #3A8FE8; }
+.element-name--earth { color: #8B6F47; }
+.element-name--wind { color: #A8D8B9; }
+.element-name--lightning { color: #F0C940; }
+.element-name--ice { color: #A8E0F0; }
+.element-name--shadow { color: #6B3FA0; }
+.element-name--arcane { color: #D44AE8; }
+
+/* --------------------------------------------------------------------------
+   Destruction Bar (Bottom)
+   -------------------------------------------------------------------------- */
+.destruction-container {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(13, 27, 42, 0.75);
+    border-radius: 12px;
+    border-width: 1px;
+    border-color: rgba(212, 160, 41, 0.3);
+    margin: 0 40px;
+}
+
+.destruction-label {
+    font-size: 12px;
+    color: rgba(240, 230, 211, 0.6);
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-right: 12px;
+    width: 100px;
+}
+
+.destruction-bar {
+    flex-grow: 1;
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgba(240, 230, 211, 0.1);
+    overflow: hidden;
+}
+
+.destruction-bar__fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    background-color: #E85D3A;
+    transition-property: width;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-out;
+}
+
+.destruction-percent {
+    font-size: 16px;
+    color: #E85D3A;
+    -unity-font-style: bold;
+    margin-left: 12px;
+    width: 48px;
+    -unity-text-align: middle-right;
+}

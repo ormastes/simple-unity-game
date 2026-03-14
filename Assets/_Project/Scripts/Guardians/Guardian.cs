@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using ElementalSiege.Core;
+using ElementalSiege.Elements;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Guardians
 {
@@ -20,7 +21,7 @@ namespace ElementalSiege.Guardians
 
         [Header("Shield")]
         [SerializeField] private bool _hasShield;
-        [SerializeField] private ElementType _shieldWeakness = ElementType.Fire;
+        [SerializeField] private ElementCategory _shieldWeakness = ElementCategory.Fire;
         [SerializeField] private float _shieldHealth = 50f;
         [SerializeField] private GameObject _shieldVisual;
         [SerializeField] private Color _shieldColor = new Color(0.5f, 0.8f, 1f, 0.6f);
@@ -127,7 +128,7 @@ namespace ElementalSiege.Guardians
         /// <param name="amount">Raw damage amount.</param>
         /// <param name="element">Element type of the attack.</param>
         /// <returns>Actual damage dealt.</returns>
-        public virtual float TakeDamage(float amount, ElementType element)
+        public virtual float TakeDamage(float amount, ElementCategory element)
         {
             if (_isDead) return 0f;
 

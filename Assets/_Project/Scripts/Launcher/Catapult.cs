@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using ElementalSiege.Input;
+using ElementalSiege.Orbs;
 
 namespace ElementalSiege.Launcher
 {
@@ -412,19 +413,4 @@ namespace ElementalSiege.Launcher
         #endregion
     }
 
-    /// <summary>
-    /// Abstract base class for all elemental orbs. Concrete orb types should derive from this
-    /// and implement element-specific behaviour (e.g. explosion, freeze, split).
-    /// </summary>
-    public abstract class OrbBase : MonoBehaviour
-    {
-        /// <summary>Called by the catapult immediately after launch.</summary>
-        public virtual void OnLaunched() { }
-
-        /// <summary>Called when the orb has settled or gone off-screen.</summary>
-        public virtual void OnSettled() { }
-
-        /// <summary>Called when the player taps during flight to activate the orb's special ability.</summary>
-        public virtual void ActivateAbility() { }
-    }
 }

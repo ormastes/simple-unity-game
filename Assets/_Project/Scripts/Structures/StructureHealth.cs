@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using ElementalSiege.Elements;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Structures
 {
@@ -180,7 +182,7 @@ namespace ElementalSiege.Structures
         /// </summary>
         /// <param name="baseDamage">Raw damage before multiplier.</param>
         /// <param name="elementType">The element type of the incoming damage.</param>
-        public void TakeElementalDamage(float baseDamage, ElementType elementType)
+        public void TakeElementalDamage(float baseDamage, ElementCategory elementType)
         {
             float multiplier = GetElementMultiplier(elementType);
             TakeDamage(baseDamage * multiplier);
@@ -280,16 +282,16 @@ namespace ElementalSiege.Structures
         /// </summary>
         /// <param name="elementType">The element dealing damage.</param>
         /// <returns>The multiplier to apply to base damage.</returns>
-        private float GetElementMultiplier(ElementType elementType)
+        private float GetElementMultiplier(ElementCategory elementType)
         {
             return elementType switch
             {
-                ElementType.Fire      => fireDamageMultiplier,
-                ElementType.Ice       => iceDamageMultiplier,
-                ElementType.Lightning => lightningDamageMultiplier,
-                ElementType.Wind      => windDamageMultiplier,
-                ElementType.Crystal   => crystalDamageMultiplier,
-                _                     => 1.0f
+                ElementCategory.Fire      => fireDamageMultiplier,
+                ElementCategory.Ice       => iceDamageMultiplier,
+                ElementCategory.Lightning => lightningDamageMultiplier,
+                ElementCategory.Wind      => windDamageMultiplier,
+                ElementCategory.Crystal   => crystalDamageMultiplier,
+                _                         => 1.0f
             };
         }
 
@@ -329,16 +331,4 @@ namespace ElementalSiege.Structures
         #endregion
     }
 
-    /// <summary>
-    /// Defines the elemental types used for damage calculations.
-    /// </summary>
-    public enum ElementType
-    {
-        None,
-        Fire,
-        Ice,
-        Lightning,
-        Wind,
-        Crystal
-    }
 }

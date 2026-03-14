@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ElementalSiege.Elements;
+using ElementalSiege.Orbs;
+using ElementalSiege.Structures;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Environment
 {
@@ -10,7 +14,7 @@ namespace ElementalSiege.Environment
     /// </summary>
     [RequireComponent(typeof(BoxCollider2D))]
     [DisallowMultipleComponent]
-    public class Water2D : MonoBehaviour
+    public class Water2D : MonoBehaviour, IWaterSurface
     {
         #region Serialized Fields
 
@@ -217,6 +221,25 @@ namespace ElementalSiege.Environment
         #region Public Methods
 
         /// <summary>
+        /// Implements IWaterSurface.FreezeIntoIce — freezes this water using the orb system.
+        /// </summary>
+        public void FreezeIntoIce(GameObject icePlatformPrefab, float duration)
+        {
+            FreezeWater();
+            // Auto-thaw after duration
+            if (duration > 0f)
+            {
+                StartCoroutine(ThawAfterDelay(duration));
+            }
+        }
+
+        private System.Collections.IEnumerator ThawAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            ThawWater();
+        }
+
+        /// <summary>
         /// Freezes the water, turning it into a solid platform.
         /// All submerged objects have their drag restored.
         /// </summary>
@@ -280,14 +303,14 @@ namespace ElementalSiege.Environment
             {
                 if (kvp.Key == null) continue;
 
-                var health = kvp.Key.GetComponent<Structures.StructureHealth>();
+                var health = kvp.Key.GetComponent<StructureHealth>();
                 if (health != null)
                 {
-                    health.TakeElementalDamage(lightningDamage, Structures.ElementType.Lightning);
+                    health.TakeElementalDamage(lightningDamage, ElementCategory.Lightning);
                 }
 
                 // Also charge conductive objects
-                var conductive = kvp.Key.GetComponent<Structures.Conductive>();
+                var conductive = kvp.Key.GetComponent<Conductive>();
                 if (conductive != null)
                 {
                     conductive.Charge();

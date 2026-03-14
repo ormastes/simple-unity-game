@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ElementalSiege.Structures;
 
 namespace ElementalSiege.Environment
 {
     /// <summary>
     /// 2D wind area that applies directional force to objects with the
-    /// <see cref="Structures.WindAffected"/> component. Supports constant wind,
+    /// <see cref="WindAffected"/> component. Supports constant wind,
     /// periodic gusts, visual wind particles, and toggling for puzzle mechanics.
     /// </summary>
     [RequireComponent(typeof(BoxCollider2D))]
@@ -95,8 +96,8 @@ namespace ElementalSiege.Environment
 
         private BoxCollider2D zoneCollider;
         private AreaEffector2D areaEffector;
-        private readonly HashSet<Structures.WindAffected> affectedObjects =
-            new HashSet<Structures.WindAffected>();
+        private readonly HashSet<WindAffected> affectedObjects =
+            new HashSet<WindAffected>();
 
         #endregion
 
@@ -125,10 +126,10 @@ namespace ElementalSiege.Environment
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            var windAffected = other.GetComponent<Structures.WindAffected>();
+            var windAffected = other.GetComponent<WindAffected>();
             if (windAffected == null && other.attachedRigidbody != null)
             {
-                windAffected = other.attachedRigidbody.GetComponent<Structures.WindAffected>();
+                windAffected = other.attachedRigidbody.GetComponent<WindAffected>();
             }
 
             if (windAffected != null)
@@ -139,10 +140,10 @@ namespace ElementalSiege.Environment
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            var windAffected = other.GetComponent<Structures.WindAffected>();
+            var windAffected = other.GetComponent<WindAffected>();
             if (windAffected == null && other.attachedRigidbody != null)
             {
-                windAffected = other.attachedRigidbody.GetComponent<Structures.WindAffected>();
+                windAffected = other.attachedRigidbody.GetComponent<WindAffected>();
             }
 
             if (windAffected != null)

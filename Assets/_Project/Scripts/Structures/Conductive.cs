@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ElementalSiege.Elements;
+using ElementalSiege.Environment;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Structures
 {
@@ -146,7 +149,7 @@ namespace ElementalSiege.Structures
             // Apply self-damage
             if (healthComponent != null && selfDamage > 0f)
             {
-                healthComponent.TakeElementalDamage(selfDamage * damageMultiplier, ElementType.Lightning);
+                healthComponent.TakeElementalDamage(selfDamage * damageMultiplier, ElementCategory.Lightning);
             }
 
             // Activate visual effects
@@ -235,14 +238,14 @@ namespace ElementalSiege.Structures
         /// </summary>
         private void TriggerMechanicalParts()
         {
-            var mechanicalParts = GetComponents<Environment.MechanicalPart>();
+            var mechanicalParts = GetComponents<MechanicalPart>();
             for (int i = 0; i < mechanicalParts.Length; i++)
             {
                 mechanicalParts[i].Activate();
             }
 
             // Also check children for connected mechanical parts
-            var childParts = GetComponentsInChildren<Environment.MechanicalPart>();
+            var childParts = GetComponentsInChildren<MechanicalPart>();
             for (int i = 0; i < childParts.Length; i++)
             {
                 childParts[i].Activate();

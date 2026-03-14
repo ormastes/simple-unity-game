@@ -1,0 +1,356 @@
+/* ==========================================================================
+   Elemental Siege — Common Styles
+   Shared design tokens, base components, and utility classes.
+   Fantasy/elemental theme: warm golds, deep blues, clean readable UI.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Custom Properties (Design Tokens)
+   -------------------------------------------------------------------------- */
+:root {
+    /* Brand Colors */
+    --color-primary: #D4A029;
+    --color-primary-hover: #E8B635;
+    --color-primary-pressed: #B8891F;
+    --color-secondary: #1A3A5C;
+    --color-secondary-light: #254D75;
+    --color-accent: #E85D3A;
+    --color-accent-hover: #F06E4D;
+
+    /* Semantic Colors */
+    --color-bg: #0D1B2A;
+    --color-bg-light: #132B44;
+    --color-text: #F0E6D3;
+    --color-text-muted: #A89B8C;
+    --color-success: #4CAF50;
+    --color-danger: #E53935;
+    --color-danger-hover: #EF5350;
+
+    /* Element Colors */
+    --color-fire: #E85D3A;
+    --color-water: #3A8FE8;
+    --color-earth: #8B6F47;
+    --color-wind: #A8D8B9;
+    --color-lightning: #F0C940;
+    --color-ice: #A8E0F0;
+    --color-shadow: #6B3FA0;
+    --color-arcane: #D44AE8;
+
+    /* Typography */
+    --font-title: 48px;
+    --font-heading: 32px;
+    --font-body: 20px;
+    --font-small: 14px;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-xxl: 48px;
+
+    /* Borders */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-round: 50%;
+}
+
+/* --------------------------------------------------------------------------
+   Base / Reset
+   -------------------------------------------------------------------------- */
+* {
+    -unity-font-definition: url("project://database/Assets/_Project/Fonts/MainFont.asset");
+    color: var(--color-text);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0);
+    font-size: var(--font-body);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    cursor: link;
+    transition-property: background-color, border-color, scale;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in-out;
+    margin: var(--spacing-xs) 0;
+}
+
+.btn:hover {
+    scale: 1.03;
+}
+
+.btn:active {
+    scale: 0.97;
+}
+
+/* Primary Button — Gold Background */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+}
+
+.btn-primary:active {
+    background-color: var(--color-primary-pressed);
+    border-color: var(--color-primary-pressed);
+}
+
+/* Secondary Button — Outlined Gold */
+.btn-secondary {
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(212, 160, 41, 0.12);
+    border-color: var(--color-primary-hover);
+    color: var(--color-primary-hover);
+}
+
+.btn-secondary:active {
+    background-color: rgba(212, 160, 41, 0.2);
+}
+
+/* Danger Button — Red */
+.btn-danger {
+    background-color: var(--color-danger);
+    color: var(--color-text);
+    border-color: var(--color-danger);
+}
+
+.btn-danger:hover {
+    background-color: var(--color-danger-hover);
+    border-color: var(--color-danger-hover);
+}
+
+.btn-danger:active {
+    background-color: #C62828;
+    border-color: #C62828;
+}
+
+/* Button Size Modifiers */
+.btn-large {
+    padding: 16px 40px;
+    font-size: 24px;
+    border-radius: 12px;
+}
+
+.btn-wide {
+    width: 260px;
+    -unity-text-align: middle-center;
+}
+
+/* --------------------------------------------------------------------------
+   Panels
+   -------------------------------------------------------------------------- */
+.panel {
+    background-color: var(--color-secondary);
+    border-radius: var(--radius-lg);
+    border-width: 2px;
+    border-color: var(--color-primary);
+    padding: var(--spacing-lg);
+}
+
+/* --------------------------------------------------------------------------
+   Overlay
+   -------------------------------------------------------------------------- */
+.overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Stars
+   -------------------------------------------------------------------------- */
+.star-empty {
+    width: 32px;
+    height: 32px;
+    background-color: rgba(240, 230, 211, 0.2);
+    border-radius: 2px;
+    -unity-background-image-tint-color: rgba(240, 230, 211, 0.3);
+}
+
+.star-filled {
+    width: 32px;
+    height: 32px;
+    background-color: var(--color-primary);
+    border-radius: 2px;
+    -unity-background-image-tint-color: var(--color-primary);
+}
+
+.star-large {
+    width: 56px;
+    height: 56px;
+}
+
+.star-icon--small {
+    width: 20px;
+    height: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Sliders
+   -------------------------------------------------------------------------- */
+.slider {
+    flex-grow: 1;
+    min-width: 160px;
+    margin: 0 var(--spacing-md);
+}
+
+.slider .unity-base-slider__dragger {
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-round);
+    background-color: var(--color-primary);
+    border-width: 2px;
+    border-color: var(--color-primary-hover);
+    margin-top: -8px;
+}
+
+.slider .unity-base-slider__tracker {
+    height: 6px;
+    border-radius: 3px;
+    background-color: rgba(240, 230, 211, 0.15);
+}
+
+.slider .unity-base-slider__drag-container {
+    height: 6px;
+}
+
+.slider-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.slider-label {
+    width: 140px;
+    font-size: var(--font-body);
+    color: var(--color-text);
+}
+
+.slider-value-label {
+    width: 40px;
+    font-size: var(--font-body);
+    color: var(--color-text-muted);
+    -unity-text-align: middle-right;
+}
+
+/* --------------------------------------------------------------------------
+   Toggles
+   -------------------------------------------------------------------------- */
+.toggle-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.toggle-label {
+    font-size: var(--font-body);
+    color: var(--color-text);
+}
+
+.toggle .unity-toggle__checkmark {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    border-width: 2px;
+    border-color: var(--color-primary);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.toggle:checked .unity-toggle__checkmark {
+    background-color: var(--color-primary);
+    -unity-background-image-tint-color: var(--color-bg);
+}
+
+/* --------------------------------------------------------------------------
+   Dropdowns
+   -------------------------------------------------------------------------- */
+.dropdown-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.dropdown-label {
+    font-size: var(--font-body);
+    color: var(--color-text);
+}
+
+.dropdown {
+    min-width: 160px;
+    background-color: var(--color-bg-light);
+    border-width: 2px;
+    border-color: var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text);
+    font-size: var(--font-body);
+}
+
+/* --------------------------------------------------------------------------
+   Dividers
+   -------------------------------------------------------------------------- */
+.popup-divider {
+    height: 2px;
+    background-color: rgba(212, 160, 41, 0.3);
+    margin: var(--spacing-md) 0;
+}
+
+.settings-section-divider {
+    height: 1px;
+    background-color: rgba(240, 230, 211, 0.1);
+    margin: var(--spacing-lg) 0;
+}
+
+/* --------------------------------------------------------------------------
+   Section Titles
+   -------------------------------------------------------------------------- */
+.settings-section-title {
+    font-size: var(--font-heading);
+    color: var(--color-primary);
+    -unity-font-style: bold;
+    margin-bottom: var(--spacing-md);
+}
+
+.settings-section-title--danger {
+    color: var(--color-danger);
+}
+
+/* --------------------------------------------------------------------------
+   Utility
+   -------------------------------------------------------------------------- */
+.hidden {
+    display: none;
+}
+
+.full-screen {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}

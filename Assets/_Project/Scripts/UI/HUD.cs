@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using ElementalSiege.Core;
+using ElementalSiege.Elements;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.UI
 {
@@ -102,7 +103,7 @@ namespace ElementalSiege.UI
         /// <param name="totalOrbs">Total number of orbs available.</param>
         /// <param name="currentElement">The first element to launch.</param>
         /// <param name="nextElement">The second element in the queue.</param>
-        public void Initialize(int totalOrbs, ElementType currentElement, ElementType nextElement)
+        public void Initialize(int totalOrbs, ElementCategory currentElement, ElementCategory nextElement)
         {
             _targetScore = 0;
             _displayedScore = 0;
@@ -143,7 +144,7 @@ namespace ElementalSiege.UI
         /// <summary>
         /// Sets the current element indicator icon and color.
         /// </summary>
-        public void SetCurrentElement(ElementType element)
+        public void SetCurrentElement(ElementCategory element)
         {
             if (_currentElementLabel != null)
                 _currentElementLabel.text = element.ToString();
@@ -158,7 +159,7 @@ namespace ElementalSiege.UI
         /// <summary>
         /// Sets the next element indicator icon and color.
         /// </summary>
-        public void SetNextElement(ElementType element)
+        public void SetNextElement(ElementCategory element)
         {
             Color elementColor = GetElementColor(element);
             if (_nextElementIcon != null)
@@ -253,17 +254,19 @@ namespace ElementalSiege.UI
         /// <summary>
         /// Returns a representative color for the given element type.
         /// </summary>
-        private Color GetElementColor(ElementType element)
+        private Color GetElementColor(ElementCategory element)
         {
             return element switch
             {
-                ElementType.Fire      => new Color(1f, 0.35f, 0.1f),
-                ElementType.Water     => new Color(0.2f, 0.5f, 1f),
-                ElementType.Earth     => new Color(0.55f, 0.4f, 0.2f),
-                ElementType.Air       => new Color(0.75f, 0.95f, 1f),
-                ElementType.Ice       => new Color(0.6f, 0.9f, 1f),
-                ElementType.Lightning => new Color(1f, 0.95f, 0.3f),
-                _                     => Color.white,
+                ElementCategory.Stone     => new Color(0.55f, 0.4f, 0.2f),
+                ElementCategory.Fire      => new Color(1f, 0.35f, 0.1f),
+                ElementCategory.Ice       => new Color(0.6f, 0.9f, 1f),
+                ElementCategory.Lightning => new Color(1f, 0.95f, 0.3f),
+                ElementCategory.Wind      => new Color(0.75f, 0.95f, 1f),
+                ElementCategory.Crystal   => new Color(0.8f, 0.6f, 1f),
+                ElementCategory.Gravity   => new Color(0.5f, 0.2f, 0.8f),
+                ElementCategory.Void      => new Color(0.2f, 0.1f, 0.3f),
+                _                         => Color.white,
             };
         }
 

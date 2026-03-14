@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using ElementalSiege.Orbs;
 
 namespace ElementalSiege.Structures
 {
@@ -10,7 +11,7 @@ namespace ElementalSiege.Structures
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     [DisallowMultipleComponent]
-    public class Freezable : MonoBehaviour
+    public class Freezable : MonoBehaviour, IFreezable
     {
         #region Serialized Fields
 
@@ -121,6 +122,15 @@ namespace ElementalSiege.Structures
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Implements IFreezable.Freeze with full parameters from the orb system.
+        /// </summary>
+        public void Freeze(float duration, float brittleMultiplier, Material frozenMaterial)
+        {
+            this.frozenJointMultiplier = brittleMultiplier;
+            Freeze(duration);
+        }
 
         /// <summary>
         /// Freezes this structure for the configured duration.

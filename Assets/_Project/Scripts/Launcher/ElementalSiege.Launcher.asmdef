@@ -1,0 +1,20 @@
+{
+    "name": "ElementalSiege.Launcher",
+    "rootNamespace": "ElementalSiege.Launcher",
+    "references": [
+        "ElementalSiege.Utilities",
+        "ElementalSiege.Core",
+        "ElementalSiege.Input",
+        "ElementalSiege.Elements",
+        "ElementalSiege.Orbs"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

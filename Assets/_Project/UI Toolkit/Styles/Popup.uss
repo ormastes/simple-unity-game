@@ -1,0 +1,473 @@
+/* ==========================================================================
+   Elemental Siege — Popup Styles
+   Shared styles for LevelComplete, PauseMenu, and other modal dialogs.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Popup Panel (Centered Modal)
+   -------------------------------------------------------------------------- */
+.popup-panel {
+    max-width: 500px;
+    min-width: 380px;
+    align-items: center;
+    padding: 32px;
+    /* Entrance animation — scale up from 0.85 */
+    scale: 1;
+    transition-property: scale, opacity;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+}
+
+.popup-panel--entering {
+    scale: 0.85;
+    opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Popup Title
+   -------------------------------------------------------------------------- */
+.popup-title {
+    font-size: 36px;
+    -unity-font-style: bold;
+    color: #D4A029;
+    -unity-text-align: middle-center;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   Stars Row (Level Complete)
+   -------------------------------------------------------------------------- */
+.popup-stars {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding: 8px 0;
+}
+
+.popup-stars .star-large {
+    width: 56px;
+    height: 56px;
+    margin: 0 8px;
+    border-radius: 4px;
+    transition-property: scale, background-color;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-out;
+}
+
+.popup-stars .star-large:nth-child(2) {
+    /* Middle star is slightly larger */
+    width: 64px;
+    height: 64px;
+    margin-top: -8px;
+}
+
+.popup-stars .star-filled {
+    background-color: #D4A029;
+    scale: 1;
+}
+
+.popup-stars .star-empty {
+    background-color: rgba(240, 230, 211, 0.12);
+    scale: 0.9;
+}
+
+/* --------------------------------------------------------------------------
+   Score Display (Level Complete)
+   -------------------------------------------------------------------------- */
+.complete-score-display {
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.complete-score-label {
+    font-size: 12px;
+    color: rgba(240, 230, 211, 0.5);
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+}
+
+.complete-score-value {
+    font-size: 40px;
+    color: #D4A029;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   Stats Grid
+   -------------------------------------------------------------------------- */
+.popup-stats {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.stat-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.stat-label {
+    font-size: 18px;
+    color: rgba(240, 230, 211, 0.7);
+}
+
+.stat-value {
+    font-size: 18px;
+    color: #F0E6D3;
+    -unity-font-style: bold;
+}
+
+/* --------------------------------------------------------------------------
+   Button Row
+   -------------------------------------------------------------------------- */
+.popup-buttons {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.popup-buttons .btn {
+    margin: 0 6px;
+    min-width: 100px;
+}
+
+.popup-buttons .btn-large {
+    min-width: 140px;
+}
+
+/* --------------------------------------------------------------------------
+   Pause Menu — Button Stack
+   -------------------------------------------------------------------------- */
+.pause-button-stack {
+    align-items: center;
+    width: 100%;
+}
+
+.pause-button-stack .btn {
+    margin-bottom: 12px;
+}
+
+.pause-button-stack .btn:last-child {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Pause Settings Sub-Panel
+   -------------------------------------------------------------------------- */
+.pause-settings-panel {
+    width: 100%;
+    padding-top: 16px;
+    border-top-width: 1px;
+    border-top-color: rgba(212, 160, 41, 0.2);
+    margin-top: 16px;
+}
+
+.pause-settings-panel .settings-section-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.pause-settings-panel .btn {
+    align-self: center;
+    margin-top: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   Main Menu Styles
+   -------------------------------------------------------------------------- */
+.mainmenu-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.mainmenu-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #0D1B2A;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Title Area */
+.title-area {
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.game-title {
+    font-size: 64px;
+    -unity-font-style: bold;
+    color: #D4A029;
+    letter-spacing: 8px;
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.5);
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+    margin-bottom: 12px;
+}
+
+.game-subtitle {
+    font-size: 22px;
+    color: rgba(240, 230, 211, 0.6);
+    -unity-font-style: italic;
+    letter-spacing: 3px;
+}
+
+/* Menu Button Stack */
+.menu-button-stack {
+    align-items: center;
+}
+
+.menu-button-stack .btn {
+    margin-bottom: 16px;
+}
+
+.menu-button-stack .btn:last-child {
+    margin-bottom: 0;
+}
+
+/* Version Label */
+.version-label {
+    position: absolute;
+    bottom: 16px;
+    right: 24px;
+    font-size: 14px;
+    color: rgba(240, 230, 211, 0.3);
+}
+
+/* Credits Panel */
+.credits-panel {
+    position: absolute;
+    width: 400px;
+    max-height: 500px;
+    align-items: center;
+}
+
+.credits-title {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: #D4A029;
+    margin-bottom: 8px;
+}
+
+.credits-scroll {
+    flex-grow: 1;
+    width: 100%;
+    max-height: 350px;
+}
+
+.credits-text {
+    font-size: 18px;
+    color: rgba(240, 230, 211, 0.8);
+    -unity-text-align: upper-center;
+    white-space: normal;
+    padding: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Settings Panel
+   -------------------------------------------------------------------------- */
+.settings-panel {
+    max-width: 560px;
+    min-width: 440px;
+    max-height: 80%;
+    align-self: center;
+}
+
+.settings-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.settings-back-btn {
+    padding: 6px 14px;
+    font-size: 16px;
+}
+
+.settings-header-spacer {
+    width: 60px;
+}
+
+.settings-scroll {
+    flex-grow: 1;
+    padding: 8px 0;
+}
+
+/* --------------------------------------------------------------------------
+   Confirmation Dialog
+   -------------------------------------------------------------------------- */
+.confirm-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.confirm-panel {
+    max-width: 400px;
+    align-items: center;
+    padding: 28px;
+}
+
+.confirm-title {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: #E53935;
+    margin-bottom: 12px;
+}
+
+.confirm-message {
+    font-size: 16px;
+    color: rgba(240, 230, 211, 0.8);
+    -unity-text-align: upper-center;
+    white-space: normal;
+    margin-bottom: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Tutorial Styles
+   -------------------------------------------------------------------------- */
+.tutorial-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.tutorial-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.tutorial-mask {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.tutorial-focus-ring {
+    position: absolute;
+    border-width: 3px;
+    border-color: #D4A029;
+    border-radius: 12px;
+    /* Pulsing glow via transition */
+    transition-property: border-color, scale;
+    transition-duration: 0.8s;
+    transition-timing-function: ease-in-out;
+}
+
+.tutorial-arrow {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    /* Arrow rendered as rotated element or background-image */
+    background-color: #D4A029;
+    border-radius: 4px;
+    rotate: 45deg;
+}
+
+/* Speech Bubble */
+.tutorial-bubble {
+    position: absolute;
+    max-width: 360px;
+    min-width: 260px;
+}
+
+.tutorial-bubble__tail {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: #1A3A5C;
+    border-width: 2px;
+    border-color: #D4A029;
+    rotate: 45deg;
+    top: -10px;
+    left: 40px;
+    border-top-width: 0;
+    border-right-width: 0;
+}
+
+.tutorial-bubble__content {
+    background-color: #1A3A5C;
+    border-radius: 12px;
+    border-width: 2px;
+    border-color: #D4A029;
+    padding: 20px;
+}
+
+.tutorial-text {
+    font-size: 18px;
+    color: #F0E6D3;
+    white-space: normal;
+    -unity-text-align: upper-left;
+}
+
+/* Bottom Bar */
+.tutorial-bottom-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px 0 20px;
+}
+
+/* Step Indicator Dots */
+.tutorial-steps {
+    flex-direction: row;
+    align-items: center;
+}
+
+.tutorial-step-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(240, 230, 211, 0.2);
+    margin-right: 6px;
+    transition-property: background-color, scale;
+    transition-duration: 0.25s;
+}
+
+.tutorial-step-dot--active {
+    background-color: #D4A029;
+    scale: 1.2;
+}
+
+.tutorial-step-dot:last-child {
+    margin-right: 0;
+}
+
+/* Dismiss Button */
+.tutorial-dismiss-btn {
+    padding: 8px 20px;
+    font-size: 16px;
+}
+
+/* Step Counter */
+.tutorial-step-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    margin-left: -20px;
+    font-size: 14px;
+    color: rgba(240, 230, 211, 0.5);
+}

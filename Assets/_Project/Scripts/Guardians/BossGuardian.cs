@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ElementalSiege.Core;
+using ElementalSiege.Elements;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Guardians
 {
@@ -28,7 +29,7 @@ namespace ElementalSiege.Guardians
             public float healthThreshold = 1f;
 
             /// <summary>Element the boss is vulnerable to during this phase.</summary>
-            public ElementType vulnerability;
+            public ElementCategory vulnerability;
 
             /// <summary>Color tint representing this phase.</summary>
             public Color phaseColor = Color.white;
@@ -167,7 +168,7 @@ namespace ElementalSiege.Guardians
         /// Applies damage with phase-awareness. Invulnerable during transitions.
         /// Extra damage when vulnerable or hit by the phase's weakness element.
         /// </summary>
-        public override float TakeDamage(float amount, ElementType element)
+        public override float TakeDamage(float amount, ElementCategory element)
         {
             if (IsInTransition) return 0f;
 

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using ElementalSiege.Core;
+using ElementalSiege.Elements;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.VFX
 {
@@ -23,10 +24,10 @@ namespace ElementalSiege.VFX
         public class ComboDefinition
         {
             /// <summary>First element in the combination.</summary>
-            public ElementType elementA;
+            public ElementCategory elementA;
 
             /// <summary>Second element in the combination.</summary>
-            public ElementType elementB;
+            public ElementCategory elementB;
 
             /// <summary>Display name (e.g., "STEAM BLAST!").</summary>
             public string comboName;
@@ -124,7 +125,7 @@ namespace ElementalSiege.VFX
         /// <param name="elementB">Second element.</param>
         /// <param name="position">World-space position for the effect.</param>
         /// <returns>True if a combo definition was found and triggered.</returns>
-        public bool TriggerCombo(ElementType elementA, ElementType elementB, Vector3 position)
+        public bool TriggerCombo(ElementCategory elementA, ElementCategory elementB, Vector3 position)
         {
             string key = GetComboKey(elementA, elementB);
 
@@ -170,7 +171,7 @@ namespace ElementalSiege.VFX
         /// <summary>
         /// Returns the combo name for two elements, or null if no combo exists.
         /// </summary>
-        public string GetComboName(ElementType elementA, ElementType elementB)
+        public string GetComboName(ElementCategory elementA, ElementCategory elementB)
         {
             string key = GetComboKey(elementA, elementB);
             if (_comboLookup.TryGetValue(key, out ComboDefinition combo))
@@ -390,7 +391,7 @@ namespace ElementalSiege.VFX
             }
         }
 
-        private static string GetComboKey(ElementType a, ElementType b)
+        private static string GetComboKey(ElementCategory a, ElementCategory b)
         {
             // Normalize so order doesn't matter
             int ia = (int)a;

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd">
+
+    <!-- Tutorial Overlay -->
+    <engine:VisualElement name="tutorial-root" class="tutorial-root">
+
+        <!-- Semi-Transparent Overlay Background (with cutout support) -->
+        <engine:VisualElement name="tutorial-overlay" class="tutorial-overlay">
+
+            <!-- Cutout Mask Layers (positioned via code to create a "hole") -->
+            <engine:VisualElement name="mask-top" class="tutorial-mask" />
+            <engine:VisualElement name="mask-bottom" class="tutorial-mask" />
+            <engine:VisualElement name="mask-left" class="tutorial-mask" />
+            <engine:VisualElement name="mask-right" class="tutorial-mask" />
+
+        </engine:VisualElement>
+
+        <!-- Focus Highlight Ring (positioned over the cutout area) -->
+        <engine:VisualElement name="focus-ring" class="tutorial-focus-ring" />
+
+        <!-- Arrow Indicator (rotated via code to point at focus area) -->
+        <engine:VisualElement name="tutorial-arrow" class="tutorial-arrow" />
+
+        <!-- Speech Bubble Container (positioned dynamically via code) -->
+        <engine:VisualElement name="speech-bubble" class="tutorial-bubble">
+
+            <!-- Bubble Tail/Arrow -->
+            <engine:VisualElement class="tutorial-bubble__tail" />
+
+            <!-- Tutorial Content -->
+            <engine:VisualElement class="tutorial-bubble__content">
+                <engine:Label name="tutorial-text" class="tutorial-text"
+                    text="Drag to aim your orb, then release to launch!" />
+            </engine:VisualElement>
+
+            <!-- Bottom Bar: Step Indicator + Dismiss -->
+            <engine:VisualElement class="tutorial-bottom-bar">
+
+                <!-- Step Indicator Dots -->
+                <engine:VisualElement name="step-indicators" class="tutorial-steps">
+                    <engine:VisualElement name="step-1" class="tutorial-step-dot tutorial-step-dot--active" />
+                    <engine:VisualElement name="step-2" class="tutorial-step-dot" />
+                    <engine:VisualElement name="step-3" class="tutorial-step-dot" />
+                    <engine:VisualElement name="step-4" class="tutorial-step-dot" />
+                    <engine:VisualElement name="step-5" class="tutorial-step-dot" />
+                </engine:VisualElement>
+
+                <!-- Dismiss Button -->
+                <engine:Button name="dismiss-btn" class="btn btn-primary tutorial-dismiss-btn" text="Got it!" />
+
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+
+        <!-- Step Counter Label -->
+        <engine:Label name="step-counter" class="tutorial-step-counter" text="1 / 5" />
+
+    </engine:VisualElement>
+
+</engine:UXML>

@@ -1,20 +1,9 @@
 using UnityEngine;
+using ElementalSiege.Elements;
+using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Core
 {
-    /// <summary>
-    /// Enumerates the elemental types available in Elemental Siege.
-    /// </summary>
-    public enum ElementType
-    {
-        Fire,
-        Water,
-        Earth,
-        Air,
-        Ice,
-        Lightning
-    }
-
     /// <summary>
     /// Difficulty rating for a level.
     /// </summary>
@@ -30,7 +19,7 @@ namespace ElementalSiege.Core
     /// Create via Assets > Create > Elemental Siege > Level Data.
     /// </summary>
     [CreateAssetMenu(fileName = "NewLevelData", menuName = "Elemental Siege/Level Data", order = 0)]
-    public class LevelData : ScriptableObject
+    public class CoreLevelData : ScriptableObject
     {
         #region Identity
 
@@ -51,9 +40,9 @@ namespace ElementalSiege.Core
 
         #region Gameplay
 
-        /// <summary>Element types available as orbs in this level.</summary>
+        /// <summary>Element categories available as orbs in this level.</summary>
         [Header("Gameplay")]
-        [SerializeField] private ElementType[] _availableOrbs;
+        [SerializeField] private ElementCategory[] _availableOrbs;
 
         /// <summary>Maximum number of stars achievable (always 3).</summary>
         [SerializeField] private int _maxStars = 3;
@@ -102,8 +91,8 @@ namespace ElementalSiege.Core
         /// <summary>Zero-based level index within the world.</summary>
         public int LevelIndex => _levelIndex;
 
-        /// <summary>Element types available as orbs in this level.</summary>
-        public ElementType[] AvailableOrbs => _availableOrbs;
+        /// <summary>Element categories available as orbs in this level.</summary>
+        public ElementCategory[] AvailableOrbs => _availableOrbs;
 
         /// <summary>Maximum number of stars (always 3).</summary>
         public int MaxStars => _maxStars;
@@ -146,9 +135,9 @@ namespace ElementalSiege.Core
         }
 
         /// <summary>
-        /// Returns whether the given element type is available in this level.
+        /// Returns whether the given element category is available in this level.
         /// </summary>
-        public bool HasElement(ElementType element)
+        public bool HasElement(ElementCategory element)
         {
             if (_availableOrbs == null) return false;
             foreach (var orb in _availableOrbs)

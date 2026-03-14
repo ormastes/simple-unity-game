@@ -1,0 +1,17 @@
+{
+    "name": "ElementalSiege.Elements",
+    "rootNamespace": "ElementalSiege.Elements",
+    "references": [
+        "ElementalSiege.Utilities",
+        "ElementalSiege.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

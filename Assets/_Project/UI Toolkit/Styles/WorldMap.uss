@@ -1,0 +1,268 @@
+/* ==========================================================================
+   Elemental Siege — World Map Styles
+   World/level selection screen: world panels, level buttons, star displays.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root Layout
+   -------------------------------------------------------------------------- */
+.worldmap-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #0D1B2A;
+    flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+.worldmap-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background-color: rgba(26, 58, 92, 0.8);
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(212, 160, 41, 0.3);
+}
+
+.worldmap-back-btn {
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.worldmap-title {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: #D4A029;
+    letter-spacing: 4px;
+}
+
+.total-stars-container {
+    flex-direction: row;
+    align-items: center;
+}
+
+.total-stars-label {
+    font-size: 20px;
+    color: #D4A029;
+    -unity-font-style: bold;
+    margin-left: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Scroll Area
+   -------------------------------------------------------------------------- */
+.world-scroll {
+    flex-grow: 1;
+    padding: 16px 24px;
+}
+
+.world-scroll .unity-scroll-view__content-container {
+    padding-bottom: 32px;
+}
+
+/* --------------------------------------------------------------------------
+   World Panel (Expandable Card)
+   -------------------------------------------------------------------------- */
+.world-panel {
+    background-color: rgba(26, 58, 92, 0.6);
+    border-radius: 16px;
+    border-width: 2px;
+    border-color: rgba(212, 160, 41, 0.25);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition-property: border-color, background-color;
+    transition-duration: 0.2s;
+}
+
+.world-panel:hover {
+    border-color: rgba(212, 160, 41, 0.5);
+    background-color: rgba(26, 58, 92, 0.8);
+}
+
+/* Element-themed accent borders */
+.world-panel--fire { border-left-width: 4px; border-left-color: #E85D3A; }
+.world-panel--water { border-left-width: 4px; border-left-color: #3A8FE8; }
+.world-panel--earth { border-left-width: 4px; border-left-color: #8B6F47; }
+.world-panel--wind { border-left-width: 4px; border-left-color: #A8D8B9; }
+.world-panel--lightning { border-left-width: 4px; border-left-color: #F0C940; }
+.world-panel--ice { border-left-width: 4px; border-left-color: #A8E0F0; }
+.world-panel--shadow { border-left-width: 4px; border-left-color: #6B3FA0; }
+.world-panel--arcane { border-left-width: 4px; border-left-color: #D44AE8; }
+
+/* Locked world */
+.world-panel--locked {
+    opacity: 0.45;
+    border-color: rgba(240, 230, 211, 0.1);
+}
+
+.world-panel--locked .world-name {
+    color: rgba(240, 230, 211, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   World Panel Header
+   -------------------------------------------------------------------------- */
+.world-panel__header {
+    flex-direction: row;
+    align-items: center;
+    padding: 16px 20px;
+}
+
+.world-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    margin-right: 16px;
+    border-width: 2px;
+}
+
+/* Element-specific icon styling */
+.world-icon--fire { background-color: rgba(232, 93, 58, 0.3); border-color: #E85D3A; }
+.world-icon--water { background-color: rgba(58, 143, 232, 0.3); border-color: #3A8FE8; }
+.world-icon--earth { background-color: rgba(139, 111, 71, 0.3); border-color: #8B6F47; }
+.world-icon--wind { background-color: rgba(168, 216, 185, 0.3); border-color: #A8D8B9; }
+.world-icon--lightning { background-color: rgba(240, 201, 64, 0.3); border-color: #F0C940; }
+.world-icon--ice { background-color: rgba(168, 224, 240, 0.3); border-color: #A8E0F0; }
+.world-icon--shadow { background-color: rgba(107, 63, 160, 0.3); border-color: #6B3FA0; }
+.world-icon--arcane { background-color: rgba(212, 74, 232, 0.3); border-color: #D44AE8; }
+
+.world-panel__info {
+    flex-grow: 1;
+}
+
+.world-name {
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: #F0E6D3;
+    margin-bottom: 4px;
+}
+
+.world-stars {
+    font-size: 16px;
+    color: #D4A029;
+}
+
+.world-expand-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 1px;
+    border-color: rgba(212, 160, 41, 0.3);
+    color: #D4A029;
+    font-size: 16px;
+    -unity-text-align: middle-center;
+    padding: 0;
+    transition-property: rotate, background-color;
+    transition-duration: 0.25s;
+}
+
+.world-expand-btn:hover {
+    background-color: rgba(212, 160, 41, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   Level List
+   -------------------------------------------------------------------------- */
+.world-levels {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 8px 20px 20px 20px;
+    justify-content: flex-start;
+}
+
+.world-levels--collapsed {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Level Button
+   -------------------------------------------------------------------------- */
+.level-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    margin: 8px;
+    font-size: 20px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    padding: 0;
+    border-width: 2px;
+    align-items: center;
+    justify-content: center;
+    transition-property: scale, border-color, background-color;
+    transition-duration: 0.15s;
+}
+
+.level-btn:hover {
+    scale: 1.08;
+}
+
+.level-btn:active {
+    scale: 0.95;
+}
+
+/* Unlocked level */
+.level-btn--unlocked {
+    background-color: rgba(26, 58, 92, 0.8);
+    border-color: rgba(212, 160, 41, 0.5);
+    color: #F0E6D3;
+}
+
+.level-btn--unlocked:hover {
+    border-color: #D4A029;
+    background-color: rgba(26, 58, 92, 1);
+}
+
+/* Completed level */
+.level-btn--completed {
+    background-color: rgba(212, 160, 41, 0.15);
+    border-color: #D4A029;
+    color: #D4A029;
+}
+
+/* Locked level */
+.level-btn--locked {
+    background-color: rgba(240, 230, 211, 0.05);
+    border-color: rgba(240, 230, 211, 0.15);
+    color: rgba(240, 230, 211, 0.25);
+    cursor: arrow;
+}
+
+.level-btn--locked:hover {
+    scale: 1;
+}
+
+/* Lock overlay icon */
+.lock-icon {
+    width: 16px;
+    height: 16px;
+    background-color: rgba(240, 230, 211, 0.2);
+    border-radius: 2px;
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+}
+
+/* --------------------------------------------------------------------------
+   Star Display (under level button)
+   -------------------------------------------------------------------------- */
+.star-display {
+    flex-direction: row;
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    margin-left: -24px;
+}
+
+.star-display .star-empty,
+.star-display .star-filled {
+    width: 14px;
+    height: 14px;
+    margin: 0 1px;
+}

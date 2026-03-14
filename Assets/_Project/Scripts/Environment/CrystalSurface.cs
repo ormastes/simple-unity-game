@@ -1,4 +1,5 @@
 using UnityEngine;
+using ElementalSiege.Orbs;
 
 namespace ElementalSiege.Environment
 {
@@ -10,7 +11,7 @@ namespace ElementalSiege.Environment
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(SpriteRenderer))]
     [DisallowMultipleComponent]
-    public class CrystalSurface : MonoBehaviour
+    public class CrystalSurface : MonoBehaviour, ICrystalSurface
     {
         #region Serialized Fields
 

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd">
+
+    <!-- World / Level Selection Screen -->
+    <engine:VisualElement name="worldmap-root" class="worldmap-root">
+
+        <!-- Header -->
+        <engine:VisualElement name="worldmap-header" class="worldmap-header">
+            <engine:Button name="back-btn" class="btn btn-secondary worldmap-back-btn" text="Back" />
+            <engine:Label name="worldmap-title" class="worldmap-title" text="WORLD MAP" />
+            <engine:VisualElement name="total-stars-container" class="total-stars-container">
+                <engine:VisualElement class="star-filled star-icon--small" />
+                <engine:Label name="total-stars-label" class="total-stars-label" text="0 / 120" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+
+        <!-- Scrollable World List -->
+        <engine:ScrollView name="world-scroll" class="world-scroll" mode="Vertical">
+
+            <!-- World 1: Fire -->
+            <engine:VisualElement name="world-1" class="world-panel world-panel--fire">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--fire" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Ember Peaks" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--unlocked" text="1">
+                        <engine:VisualElement class="star-display">
+                            <engine:VisualElement class="star-empty" />
+                            <engine:VisualElement class="star-empty" />
+                            <engine:VisualElement class="star-empty" />
+                        </engine:VisualElement>
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="5">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- World 2: Water -->
+            <engine:VisualElement name="world-2" class="world-panel world-panel--water">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--water" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Tidal Depths" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--locked" text="1">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="5">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- World 3: Earth -->
+            <engine:VisualElement name="world-3" class="world-panel world-panel--earth">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--earth" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Stone Bastion" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--locked" text="1">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- World 4: Wind -->
+            <engine:VisualElement name="world-4" class="world-panel world-panel--wind">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--wind" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Gale Spires" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--locked" text="1">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="5">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- World 5: Lightning -->
+            <engine:VisualElement name="world-5" class="world-panel world-panel--lightning">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--lightning" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Thunder Citadel" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--locked" text="1">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="5">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- World 6: Ice -->
+            <engine:VisualElement name="world-6" class="world-panel world-panel--ice">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--ice" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Frost Hollow" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--locked" text="1">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- World 7: Shadow -->
+            <engine:VisualElement name="world-7" class="world-panel world-panel--shadow">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--shadow" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Void Sanctum" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--locked" text="1">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="5">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- World 8: Arcane -->
+            <engine:VisualElement name="world-8" class="world-panel world-panel--arcane">
+                <engine:VisualElement class="world-panel__header">
+                    <engine:VisualElement class="world-icon world-icon--arcane" />
+                    <engine:VisualElement class="world-panel__info">
+                        <engine:Label class="world-name" text="Arcane Nexus" />
+                        <engine:Label class="world-stars" text="0 / 15" />
+                    </engine:VisualElement>
+                    <engine:Button class="world-expand-btn" text="▼" />
+                </engine:VisualElement>
+                <engine:VisualElement class="world-levels world-levels--collapsed">
+                    <engine:Button class="level-btn level-btn--locked" text="1">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="2">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="3">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="4">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                    <engine:Button class="level-btn level-btn--locked" text="5">
+                        <engine:VisualElement class="lock-icon" />
+                    </engine:Button>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:ScrollView>
+
+    </engine:VisualElement>
+
+</engine:UXML>

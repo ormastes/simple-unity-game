@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd">
+
+    <!-- Main Menu / Title Screen -->
+    <engine:VisualElement name="mainmenu-root" class="mainmenu-root">
+
+        <!-- Background Container -->
+        <engine:VisualElement name="mainmenu-bg" class="mainmenu-bg">
+
+            <!-- Title Area (upper third) -->
+            <engine:VisualElement name="title-area" class="title-area">
+                <engine:Label name="game-title" class="game-title" text="ELEMENTAL SIEGE" />
+                <engine:Label name="game-subtitle" class="game-subtitle" text="Physics Puzzle Launcher" />
+            </engine:VisualElement>
+
+            <!-- Button Stack (center) -->
+            <engine:VisualElement name="menu-buttons" class="menu-button-stack">
+                <engine:Button name="play-btn" class="btn btn-primary btn-wide btn-large" text="Play" />
+                <engine:Button name="settings-btn" class="btn btn-secondary btn-wide" text="Settings" />
+                <engine:Button name="credits-btn" class="btn btn-secondary btn-wide" text="Credits" />
+            </engine:VisualElement>
+
+            <!-- Version Number (bottom-right) -->
+            <engine:Label name="version-label" class="version-label" text="v1.0.0" />
+
+            <!-- Credits Panel (hidden by default) -->
+            <engine:VisualElement name="credits-panel" class="panel credits-panel" style="display: none;">
+                <engine:Label class="credits-title" text="Credits" />
+                <engine:VisualElement class="popup-divider" />
+                <engine:ScrollView name="credits-scroll" class="credits-scroll" mode="Vertical">
+                    <engine:Label class="credits-text" text="Game Design &amp; Development&#10;Your Studio Name&#10;&#10;Art &amp; Visual Design&#10;Artist Name&#10;&#10;Sound &amp; Music&#10;Composer Name&#10;&#10;Special Thanks&#10;The wonderful players!&#10;&#10;Built with Unity 6&#10;&#10;Copyright 2026 Your Studio" />
+                </engine:ScrollView>
+                <engine:Button name="credits-close-btn" class="btn btn-secondary" text="Close" />
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+
+    </engine:VisualElement>
+
+</engine:UXML>

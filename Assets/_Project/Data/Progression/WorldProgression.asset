@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e5f6a7b8c9d0e1f2a3b4c5d6a7b8c9, type: 3}
+  m_Name: WorldProgression
+  m_EditorClassIdentifier:
+  worlds:
+  - worldName: Verdant Shores
+    worldIndex: 0
+    starsRequired: 0
+  - worldName: Ember Peaks
+    worldIndex: 1
+    starsRequired: 5
+  - worldName: Frozen Abyss
+    worldIndex: 2
+    starsRequired: 12
+  - worldName: Stormcrest Spire
+    worldIndex: 3
+    starsRequired: 20
+  - worldName: Gale Highlands
+    worldIndex: 4
+    starsRequired: 28
+  - worldName: Crystal Caverns
+    worldIndex: 5
+    starsRequired: 40
+  - worldName: Clockwork Citadel
+    worldIndex: 6
+    starsRequired: 52
+  - worldName: The Void Throne
+    worldIndex: 7
+    starsRequired: 65

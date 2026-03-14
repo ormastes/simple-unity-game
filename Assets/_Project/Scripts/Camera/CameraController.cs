@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Unity.Cinemachine;
 using ElementalSiege.Launcher;
+using ElementalSiege.Orbs;
 
 namespace ElementalSiege.Camera
 {

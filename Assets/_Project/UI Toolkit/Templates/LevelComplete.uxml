@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd">
+
+    <!-- Level Complete Popup -->
+    <engine:VisualElement name="level-complete-root" class="overlay">
+
+        <!-- Center Panel -->
+        <engine:VisualElement name="level-complete-panel" class="panel popup-panel">
+
+            <!-- Title -->
+            <engine:Label name="complete-title" class="popup-title" text="Level Complete!" />
+
+            <!-- Stars -->
+            <engine:VisualElement name="stars-container" class="popup-stars">
+                <engine:VisualElement name="star-1" class="star-large star-empty" />
+                <engine:VisualElement name="star-2" class="star-large star-empty" />
+                <engine:VisualElement name="star-3" class="star-large star-empty" />
+            </engine:VisualElement>
+
+            <!-- Score -->
+            <engine:VisualElement name="score-display" class="complete-score-display">
+                <engine:Label class="complete-score-label" text="SCORE" />
+                <engine:Label name="complete-score-value" class="complete-score-value" text="0" />
+            </engine:VisualElement>
+
+            <!-- Stats -->
+            <engine:VisualElement name="stats-container" class="popup-stats">
+                <engine:VisualElement class="stat-row">
+                    <engine:Label class="stat-label" text="Orbs Used:" />
+                    <engine:Label name="orbs-used-value" class="stat-value" text="0 / 0" />
+                </engine:VisualElement>
+                <engine:VisualElement class="stat-row">
+                    <engine:Label class="stat-label" text="Destruction:" />
+                    <engine:Label name="destruction-value" class="stat-value" text="0%" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <!-- Divider -->
+            <engine:VisualElement class="popup-divider" />
+
+            <!-- Buttons -->
+            <engine:VisualElement name="buttons-container" class="popup-buttons">
+                <engine:Button name="retry-btn" class="btn btn-secondary" text="Retry" />
+                <engine:Button name="next-level-btn" class="btn btn-primary btn-large" text="Next Level" />
+                <engine:Button name="worldmap-btn" class="btn btn-secondary" text="World Map" />
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+
+    </engine:VisualElement>
+
+</engine:UXML>
