@@ -1,0 +1,44 @@
+# Unity generated
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+MemoryCaptures/
+
+# Visual Studio / Rider
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity meta files for debug symbols
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# OS / misc
+sysinfo.txt
+
+# Build artifacts
+*.apk
+*.aab
+*.unitypackage
+
+# Crashlytics
+crashlytics-buildid.txt
+
+# IDE
+.vs/
+.idea/
