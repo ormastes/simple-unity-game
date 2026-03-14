@@ -267,14 +267,8 @@ namespace ElementalSiege.Launcher
         {
             Vector2 launchVelocity = CalculateLaunchVelocity(_dragWorldPos);
 
-            Rigidbody2D rb = _currentOrb.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.bodyType = RigidbodyType2D.Dynamic;
-                rb.linearVelocity = launchVelocity;
-            }
-
-            _currentOrb.OnLaunched();
+            // OrbBase.OnLaunch handles setting Dynamic body type and applying force
+            _currentOrb.OnLaunch(launchVelocity);
             SetState(CatapultState.Launched);
             HideRubberBand();
 
@@ -317,11 +311,7 @@ namespace ElementalSiege.Launcher
 
         private void OnOrbSettledOrLost()
         {
-            if (_currentOrb != null)
-            {
-                _currentOrb.OnSettled();
-            }
-
+            // Orb settling is handled internally by OrbBase
             _currentOrb = null;
             SetState(CatapultState.WaitingForOrb);
         }

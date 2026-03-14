@@ -2,8 +2,7 @@
     "name": "ElementalSiege.Elements",
     "rootNamespace": "ElementalSiege.Elements",
     "references": [
-        "ElementalSiege.Utilities",
-        "ElementalSiege.Core"
+        "ElementalSiege.Utilities"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -126,7 +126,7 @@ namespace ElementalSiege.Camera
                 return;
 
             // Configure the impulse definition for a 2D shake (XY only).
-            _impulseSource.ImpulseDefinition.ImpulseType = CinemachineImpulseDefinition.ImpulseTypes.Uniform;
+            _impulseSource.ImpulseDefinition.ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Uniform;
             _impulseSource.ImpulseDefinition.ImpulseDuration = duration;
 
             // Create a custom raw signal shape if needed.

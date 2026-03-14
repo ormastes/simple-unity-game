@@ -3,6 +3,7 @@
     "rootNamespace": "ElementalSiege.Core",
     "references": [
         "ElementalSiege.Utilities",
+        "ElementalSiege.Elements",
         "Unity.TextMeshPro",
         "Unity.InputSystem"
     ],

@@ -55,9 +55,9 @@ namespace ElementalSiege.UI
 
         /// <summary>
         /// Runtime representation of a single level button inside an expanded world.
+        /// Attach to the level button prefab to expose UI references.
         /// </summary>
-        [Serializable]
-        public class LevelNodeUI
+        public class LevelNodeUI : MonoBehaviour
         {
             public Button button;
             public TextMeshProUGUI levelNumberText;

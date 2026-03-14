@@ -4,7 +4,8 @@
     "references": [
         "ElementalSiege.Utilities",
         "ElementalSiege.Core",
-        "ElementalSiege.Elements"
+        "ElementalSiege.Elements",
+        "ElementalSiege.Orbs"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

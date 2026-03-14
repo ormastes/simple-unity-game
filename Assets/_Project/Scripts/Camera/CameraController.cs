@@ -211,7 +211,9 @@ namespace ElementalSiege.Camera
 
             if (_overviewCamera != null)
             {
-                _overviewCamera.Lens.OrthographicSize = _overviewOrthoSize;
+                var lens = _overviewCamera.Lens;
+                lens.OrthographicSize = _overviewOrthoSize;
+                _overviewCamera.Lens = lens;
             }
         }
 
@@ -343,7 +345,9 @@ namespace ElementalSiege.Camera
             CinemachineCamera activeCam = GetActiveCinemachineCamera();
             if (activeCam != null)
             {
-                activeCam.Lens.OrthographicSize = targetSize;
+                var lens = activeCam.Lens;
+                lens.OrthographicSize = targetSize;
+                activeCam.Lens = lens;
             }
         }
 
@@ -394,7 +398,9 @@ namespace ElementalSiege.Camera
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / halfDuration;
-                activeCam.Lens.OrthographicSize = Mathf.Lerp(originalSize, targetSize, t);
+                var lens = activeCam.Lens;
+                lens.OrthographicSize = Mathf.Lerp(originalSize, targetSize, t);
+                activeCam.Lens = lens;
                 yield return null;
             }
 
@@ -404,11 +410,15 @@ namespace ElementalSiege.Camera
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / halfDuration;
-                activeCam.Lens.OrthographicSize = Mathf.Lerp(targetSize, originalSize, t);
+                var lens = activeCam.Lens;
+                lens.OrthographicSize = Mathf.Lerp(targetSize, originalSize, t);
+                activeCam.Lens = lens;
                 yield return null;
             }
 
-            activeCam.Lens.OrthographicSize = originalSize;
+            var finalLens = activeCam.Lens;
+            finalLens.OrthographicSize = originalSize;
+            activeCam.Lens = finalLens;
         }
 
         #endregion

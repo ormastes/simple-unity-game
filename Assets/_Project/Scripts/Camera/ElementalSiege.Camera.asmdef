@@ -4,7 +4,9 @@
     "references": [
         "ElementalSiege.Utilities",
         "ElementalSiege.Core",
-        "Unity.Cinemachine"
+        "Unity.Cinemachine",
+        "ElementalSiege.Orbs",
+        "ElementalSiege.Launcher"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

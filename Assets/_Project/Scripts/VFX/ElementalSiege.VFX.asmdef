@@ -5,7 +5,8 @@
         "ElementalSiege.Utilities",
         "ElementalSiege.Core",
         "ElementalSiege.Elements",
-        "ElementalSiege.Camera"
+        "ElementalSiege.Camera",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

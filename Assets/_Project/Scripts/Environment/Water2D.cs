@@ -178,12 +178,12 @@ namespace ElementalSiege.Environment
             {
                 submergedBodies[rb] = new DragData
                 {
-                    OriginalLinearDrag = rb.drag,
-                    OriginalAngularDrag = rb.angularDrag
+                    OriginalLinearDrag = rb.linearDamping,
+                    OriginalAngularDrag = rb.angularDamping
                 };
 
-                rb.drag = linearDamping;
-                rb.angularDrag = angularDamping;
+                rb.linearDamping = linearDamping;
+                rb.angularDamping = angularDamping;
             }
 
             SpawnSplash(other.transform.position, rb.linearVelocity);
@@ -196,8 +196,8 @@ namespace ElementalSiege.Environment
 
             if (submergedBodies.TryGetValue(rb, out DragData data))
             {
-                rb.drag = data.OriginalLinearDrag;
-                rb.angularDrag = data.OriginalAngularDrag;
+                rb.linearDamping = data.OriginalLinearDrag;
+                rb.angularDamping = data.OriginalAngularDrag;
                 submergedBodies.Remove(rb);
             }
         }
@@ -209,8 +209,8 @@ namespace ElementalSiege.Environment
             {
                 if (kvp.Key != null)
                 {
-                    kvp.Key.drag = kvp.Value.OriginalLinearDrag;
-                    kvp.Key.angularDrag = kvp.Value.OriginalAngularDrag;
+                    kvp.Key.linearDamping = kvp.Value.OriginalLinearDrag;
+                    kvp.Key.angularDamping = kvp.Value.OriginalAngularDrag;
                 }
             }
             submergedBodies.Clear();
@@ -255,8 +255,8 @@ namespace ElementalSiege.Environment
             {
                 if (kvp.Key != null)
                 {
-                    kvp.Key.drag = kvp.Value.OriginalLinearDrag;
-                    kvp.Key.angularDrag = kvp.Value.OriginalAngularDrag;
+                    kvp.Key.linearDamping = kvp.Value.OriginalLinearDrag;
+                    kvp.Key.angularDamping = kvp.Value.OriginalAngularDrag;
                 }
             }
             submergedBodies.Clear();

@@ -5,7 +5,8 @@
         "ElementalSiege.Utilities",
         "ElementalSiege.Core",
         "ElementalSiege.Elements",
-        "ElementalSiege.Structures"
+        "ElementalSiege.Structures",
+        "ElementalSiege.Orbs"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

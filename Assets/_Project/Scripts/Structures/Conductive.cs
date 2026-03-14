@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ElementalSiege.Elements;
-using ElementalSiege.Environment;
+// MechanicalPart is activated via SendMessage to avoid circular assembly dependency
 using ElementCategory = ElementalSiege.Elements.ElementCategory;
 
 namespace ElementalSiege.Structures
@@ -235,21 +235,14 @@ namespace ElementalSiege.Structures
 
         /// <summary>
         /// Triggers any MechanicalPart components on this or connected GameObjects.
+        /// Uses SendMessage to avoid circular assembly dependency with Environment.
         /// </summary>
         private void TriggerMechanicalParts()
         {
-            var mechanicalParts = GetComponents<MechanicalPart>();
-            for (int i = 0; i < mechanicalParts.Length; i++)
-            {
-                mechanicalParts[i].Activate();
-            }
+            gameObject.SendMessage("Activate", SendMessageOptions.DontRequireReceiver);
 
             // Also check children for connected mechanical parts
-            var childParts = GetComponentsInChildren<MechanicalPart>();
-            for (int i = 0; i < childParts.Length; i++)
-            {
-                childParts[i].Activate();
-            }
+            BroadcastMessage("Activate", SendMessageOptions.DontRequireReceiver);
         }
 
         /// <summary>
