@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  unity-tests:
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile.test
+    volumes:
+      - ..:/project
+      - ./test-results:/test-results
+      - ./screenshots:/screenshots
+    environment:
+      - UNITY_LICENSE=${UNITY_LICENSE}
+      - UNITY_EMAIL=${UNITY_EMAIL}
+      - UNITY_PASSWORD=${UNITY_PASSWORD}
+      - XVFB_RESOLUTION=1920x1080x24
+    shm_size: '4gb'

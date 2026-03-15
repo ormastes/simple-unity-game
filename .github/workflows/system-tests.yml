@@ -1,0 +1,62 @@
+name: System Tests (Graphics)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Assets/_Project/Scripts/**'
+      - 'Assets/_Project/Art/Shaders/**'
+      - 'Assets/_Project/Tests/SystemTests/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  system-tests:
+    name: Run Graphics System Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build test container
+        run: docker build -f Docker/Dockerfile.test -t elemental-siege-tests .
+
+      - name: Run system tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          docker run --shm-size=4g \
+            -e UNITY_LICENSE -e UNITY_EMAIL -e UNITY_PASSWORD \
+            -v ${{ github.workspace }}:/project \
+            -v /tmp/test-results:/test-results \
+            -v /tmp/screenshots:/screenshots \
+            elemental-siege-tests
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: system-test-results
+          path: /tmp/test-results/
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-screenshots
+          path: /tmp/screenshots/
+
+      - name: Publish Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: System Test Results
+          path: /tmp/test-results/system-results.xml
+          reporter: java-junit

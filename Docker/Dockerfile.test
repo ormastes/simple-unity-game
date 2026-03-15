@@ -1,0 +1,24 @@
+FROM unityci/editor:ubuntu-6000.0.23f1-linux-il2cpp-3
+
+# Install virtual framebuffer for headless graphics
+RUN apt-get update && apt-get install -y \
+    xvfb \
+    mesa-utils \
+    libgl1-mesa-dri \
+    libglx-mesa0 \
+    x11-utils \
+    imagemagick \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up virtual display
+ENV DISPLAY=:99
+ENV XVFB_RESOLUTION=1920x1080x24
+
+# Create test output directory
+RUN mkdir -p /test-results /screenshots
+
+# Entry script
+COPY Docker/run-tests.sh /run-tests.sh
+RUN chmod +x /run-tests.sh
+
+ENTRYPOINT ["/run-tests.sh"]
