@@ -2,9 +2,19 @@ using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using ElementalSiege.Core;
+using GameState = ElementalSiege.Core.GameManager.GameState;
 
 namespace ElementalSiege.Tests.PlayMode
 {
+    /// <summary>
+    /// Tests for GameManager using the real ElementalSiege.Core assembly.
+    /// The real GameManager extends Singleton&lt;GameManager&gt; and uses:
+    /// - SetState(GameState) instead of TransitionTo(GameState)
+    /// - PauseGame() / ResumeGame() instead of Pause() / Resume()
+    /// - Static event OnGameStateChanged instead of instance OnStateChanged
+    /// - GameState is a nested enum: GameManager.GameState
+    /// </summary>
     [TestFixture]
     public class GameManagerTests
     {
@@ -16,7 +26,8 @@ namespace ElementalSiege.Tests.PlayMode
         {
             _managerObject = new GameObject("TestGameManager");
             _gameManager = _managerObject.AddComponent<GameManager>();
-            _gameManager.Initialize();
+            // Singleton pattern Awake runs automatically.
+            // The Start method transitions to MainMenu, but Start runs after SetUp in test.
         }
 
         [TearDown]
@@ -25,55 +36,62 @@ namespace ElementalSiege.Tests.PlayMode
             // Restore time scale in case a test left it paused
             Time.timeScale = 1f;
 
+            // Unsubscribe static event to prevent leaks between tests
+            GameManager.OnGameStateChanged = null;
+
             if (_managerObject != null)
             {
-                Object.Destroy(_managerObject);
+                Object.DestroyImmediate(_managerObject);
             }
         }
 
         [Test]
-        public void GameManager_StartsInBootState()
+        public void GameManager_CurrentState_IsAccessible()
         {
+            // After Awake but before Start, state should be Boot (the initial field value)
+            Assert.IsNotNull(_gameManager,
+                "GameManager should be a valid component");
+            // CurrentState returns the _currentState field, initially Boot
             Assert.AreEqual(GameState.Boot, _gameManager.CurrentState,
-                "GameManager should start in the Boot state after initialization");
+                "GameManager should start in Boot state before Start() runs");
         }
 
         [UnityTest]
-        public IEnumerator GameManager_TransitionsToMainMenu()
+        public IEnumerator GameManager_TransitionsToState()
         {
-            _gameManager.TransitionTo(GameState.MainMenu);
+            _gameManager.SetState(GameState.Playing);
 
             yield return null;
 
-            Assert.AreEqual(GameState.MainMenu, _gameManager.CurrentState,
-                "GameManager should transition to MainMenu state");
+            Assert.AreEqual(GameState.Playing, _gameManager.CurrentState,
+                "GameManager should transition to Playing state");
         }
 
         [UnityTest]
         public IEnumerator GameManager_PauseSetsTimeScaleZero()
         {
-            _gameManager.TransitionTo(GameState.Playing);
+            _gameManager.SetState(GameState.Playing);
             yield return null;
 
-            _gameManager.Pause();
+            _gameManager.PauseGame();
             yield return null;
 
             Assert.AreEqual(0f, Time.timeScale, 0.001f,
                 "Pausing the game should set Time.timeScale to 0");
             Assert.AreEqual(GameState.Paused, _gameManager.CurrentState,
-                "GameManager should be in Paused state after calling Pause()");
+                "GameManager should be in Paused state after calling PauseGame()");
         }
 
         [UnityTest]
         public IEnumerator GameManager_ResumeSetsTimeScaleOne()
         {
-            _gameManager.TransitionTo(GameState.Playing);
+            _gameManager.SetState(GameState.Playing);
             yield return null;
 
-            _gameManager.Pause();
+            _gameManager.PauseGame();
             yield return null;
 
-            _gameManager.Resume();
+            _gameManager.ResumeGame();
             yield return null;
 
             Assert.AreEqual(1f, Time.timeScale, 0.001f,
@@ -89,79 +107,54 @@ namespace ElementalSiege.Tests.PlayMode
             GameState receivedNewState = GameState.Boot;
             bool eventFired = false;
 
-            _gameManager.OnStateChanged += (oldState, newState) =>
+            GameManager.OnGameStateChanged += (oldState, newState) =>
             {
                 eventFired = true;
                 receivedOldState = oldState;
                 receivedNewState = newState;
             };
 
-            _gameManager.TransitionTo(GameState.MainMenu);
+            _gameManager.SetState(GameState.Playing);
             yield return null;
 
-            Assert.IsTrue(eventFired, "OnStateChanged event should fire on state transition");
+            Assert.IsTrue(eventFired, "OnGameStateChanged event should fire on state transition");
             Assert.AreEqual(GameState.Boot, receivedOldState,
                 "Event should report the previous state correctly");
-            Assert.AreEqual(GameState.MainMenu, receivedNewState,
+            Assert.AreEqual(GameState.Playing, receivedNewState,
                 "Event should report the new state correctly");
         }
-    }
 
-    /// <summary>
-    /// Game state enumeration.
-    /// </summary>
-    public enum GameState
-    {
-        Boot,
-        MainMenu,
-        LevelSelect,
-        Loading,
-        Playing,
-        Paused,
-        LevelComplete,
-        LevelFailed,
-        GameOver
-    }
-
-    /// <summary>
-    /// Stub GameManager for test compilation.
-    /// </summary>
-    public class GameManager : MonoBehaviour
-    {
-        public GameState CurrentState { get; private set; }
-
-        public delegate void StateChangeHandler(GameState oldState, GameState newState);
-        public event StateChangeHandler OnStateChanged;
-
-        private GameState _stateBeforePause;
-
-        public void Initialize()
+        [Test]
+        public void GameManager_IsPaused_ReturnsFalse_WhenNotPaused()
         {
-            CurrentState = GameState.Boot;
+            Assert.IsFalse(_gameManager.IsPaused,
+                "IsPaused should be false when not in Paused state");
         }
 
-        public void TransitionTo(GameState newState)
+        [UnityTest]
+        public IEnumerator GameManager_CompleteLevel_SetsState()
         {
-            GameState oldState = CurrentState;
-            CurrentState = newState;
-            OnStateChanged?.Invoke(oldState, newState);
+            _gameManager.SetState(GameState.Playing);
+            yield return null;
+
+            _gameManager.CompleteLevel();
+            yield return null;
+
+            Assert.AreEqual(GameState.LevelComplete, _gameManager.CurrentState,
+                "CompleteLevel should transition to LevelComplete state");
         }
 
-        public void Pause()
+        [UnityTest]
+        public IEnumerator GameManager_FailLevel_SetsState()
         {
-            if (CurrentState == GameState.Paused) return;
+            _gameManager.SetState(GameState.Playing);
+            yield return null;
 
-            _stateBeforePause = CurrentState;
-            Time.timeScale = 0f;
-            TransitionTo(GameState.Paused);
-        }
+            _gameManager.FailLevel();
+            yield return null;
 
-        public void Resume()
-        {
-            if (CurrentState != GameState.Paused) return;
-
-            Time.timeScale = 1f;
-            TransitionTo(_stateBeforePause);
+            Assert.AreEqual(GameState.LevelFailed, _gameManager.CurrentState,
+                "FailLevel should transition to LevelFailed state");
         }
     }
 }

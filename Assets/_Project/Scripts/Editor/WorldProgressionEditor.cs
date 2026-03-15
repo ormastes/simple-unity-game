@@ -1,33 +1,40 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using ElementalSiege.Core;
 
 namespace ElementalSiege.Editor
 {
     /// <summary>
-    /// Custom inspector for WorldProgression ScriptableObject.
-    /// Displays visual progress bars per world, total star calculations,
-    /// balance analysis, and impossibility warnings.
+    /// Custom inspector for SaveManager MonoBehaviour.
+    /// Displays visual progress bars per world based on WorldUnlockRequirement
+    /// entries, total star calculations, balance analysis, and impossibility warnings.
     /// </summary>
-    [CustomEditor(typeof(WorldProgression))]
+    [CustomEditor(typeof(SaveManager))]
     public class WorldProgressionEditor : UnityEditor.Editor
     {
         private Vector2 _scrollPos;
+        private SerializedProperty _worldRequirementsProp;
+
+        private void OnEnable()
+        {
+            _worldRequirementsProp = serializedObject.FindProperty("_worldRequirements");
+        }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            var progression = (WorldProgression)target;
 
             EditorGUILayout.LabelField("World Progression", EditorStyles.boldLabel);
             EditorGUILayout.Space(4);
 
-            if (progression.worlds == null || progression.worlds.Count == 0)
+            if (_worldRequirementsProp == null || _worldRequirementsProp.arraySize == 0)
             {
                 EditorGUILayout.HelpBox(
-                    "No worlds defined. Add worlds to configure progression.",
+                    "No worlds defined. Add world requirements to configure progression.",
                     MessageType.Info);
                 DrawDefaultInspector();
+                serializedObject.ApplyModifiedProperties();
                 return;
             }
 
@@ -36,10 +43,10 @@ namespace ElementalSiege.Editor
             int totalStarsAvailable = 0;
             int totalStarsRequired = 0;
 
-            for (int i = 0; i < progression.worlds.Count; i++)
+            for (int i = 0; i < _worldRequirementsProp.arraySize; i++)
             {
-                var world = progression.worlds[i];
-                DrawWorldEntry(world, i, ref totalStarsAvailable, ref totalStarsRequired);
+                var worldProp = _worldRequirementsProp.GetArrayElementAtIndex(i);
+                DrawWorldEntry(worldProp, i, ref totalStarsAvailable, ref totalStarsRequired);
                 EditorGUILayout.Space(4);
             }
 
@@ -90,18 +97,28 @@ namespace ElementalSiege.Editor
 
             // ── Per-world balance check ──────────────────────────────
             int cumulativeAvailable = 0;
-            for (int i = 0; i < progression.worlds.Count; i++)
+            for (int i = 0; i < _worldRequirementsProp.arraySize; i++)
             {
-                var world = progression.worlds[i];
-                cumulativeAvailable += world.levelsInWorld * 3; // max 3 stars per level
+                var worldProp = _worldRequirementsProp.GetArrayElementAtIndex(i);
+                var levelIdsProp = worldProp.FindPropertyRelative("LevelIds");
+                int levelsInWorld = (levelIdsProp != null) ? levelIdsProp.arraySize : 0;
+                cumulativeAvailable += levelsInWorld * 3; // max 3 stars per level
 
-                if (i + 1 < progression.worlds.Count)
+                if (i + 1 < _worldRequirementsProp.arraySize)
                 {
-                    int nextRequired = progression.worlds[i + 1].starsToUnlock;
+                    var nextWorldProp = _worldRequirementsProp.GetArrayElementAtIndex(i + 1);
+                    var nextWorldNameProp = nextWorldProp.FindPropertyRelative("WorldName");
+                    var nextStarsReqProp = nextWorldProp.FindPropertyRelative("StarsRequired");
+
+                    string nextWorldName = nextWorldNameProp != null
+                        ? nextWorldNameProp.stringValue : $"World {i + 2}";
+                    int nextRequired = nextStarsReqProp != null
+                        ? nextStarsReqProp.intValue : 0;
+
                     if (cumulativeAvailable < nextRequired)
                     {
                         EditorGUILayout.HelpBox(
-                            $"World '{progression.worlds[i + 1].worldName}' requires " +
+                            $"World '{nextWorldName}' requires " +
                             $"{nextRequired} stars but only {cumulativeAvailable} are " +
                             "available from previous worlds.",
                             MessageType.Error);
@@ -111,39 +128,39 @@ namespace ElementalSiege.Editor
 
             // ── Worlds list (for adding/removing) ────────────────────
             EditorGUILayout.Space(8);
-            EditorGUILayout.LabelField("Edit Worlds", EditorStyles.boldLabel);
-
-            SerializedProperty worldsProp = serializedObject.FindProperty("worlds");
-            if (worldsProp != null)
-            {
-                EditorGUILayout.PropertyField(worldsProp, new GUIContent("Worlds"), true);
-            }
-            else
-            {
-                DrawDefaultInspector();
-            }
+            EditorGUILayout.LabelField("Edit World Requirements", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_worldRequirementsProp,
+                new GUIContent("World Requirements"), true);
 
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawWorldEntry(WorldEntry world, int index,
+        private void DrawWorldEntry(SerializedProperty worldProp, int index,
             ref int totalAvailable, ref int totalRequired)
         {
-            int starsAvailableInWorld = world.levelsInWorld * 3;
+            var worldNameProp = worldProp.FindPropertyRelative("WorldName");
+            var starsRequiredProp = worldProp.FindPropertyRelative("StarsRequired");
+            var levelIdsProp = worldProp.FindPropertyRelative("LevelIds");
+
+            string worldName = worldNameProp != null ? worldNameProp.stringValue : $"World {index + 1}";
+            int starsToUnlock = starsRequiredProp != null ? starsRequiredProp.intValue : 0;
+            int levelsInWorld = (levelIdsProp != null) ? levelIdsProp.arraySize : 0;
+
+            int starsAvailableInWorld = levelsInWorld * 3;
             totalAvailable += starsAvailableInWorld;
-            totalRequired += world.starsToUnlock;
+            totalRequired += starsToUnlock;
 
             // World header
             EditorGUILayout.BeginVertical("box");
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(
-                $"World {index + 1}: {world.worldName}", EditorStyles.boldLabel);
+                $"World {index + 1}: {worldName}", EditorStyles.boldLabel);
             EditorGUILayout.EndHorizontal();
 
             // Stars requirement bar
             float ratio = starsAvailableInWorld > 0
-                ? Mathf.Clamp01((float)world.starsToUnlock / starsAvailableInWorld)
+                ? Mathf.Clamp01((float)starsToUnlock / starsAvailableInWorld)
                 : 0f;
 
             Color barColor = ratio > 0.9f ? Color.red
@@ -156,30 +173,13 @@ namespace ElementalSiege.Editor
                 barRect.width * Mathf.Clamp01(ratio), barRect.height);
             EditorGUI.DrawRect(fillRect, new Color(barColor.r, barColor.g, barColor.b, 0.7f));
             EditorGUI.LabelField(barRect,
-                $"  Requires {world.starsToUnlock} stars to unlock",
+                $"  Requires {starsToUnlock} stars to unlock",
                 new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = Color.white } });
 
             EditorGUILayout.LabelField(
-                $"Levels: {world.levelsInWorld}  |  Stars available: {starsAvailableInWorld}");
+                $"Levels: {levelsInWorld}  |  Stars available: {starsAvailableInWorld}");
 
             EditorGUILayout.EndVertical();
         }
-    }
-
-    // ══════════════════════════════════════════════════════════════════
-    // Stub runtime types — replace with actual game assembly references
-    // ══════════════════════════════════════════════════════════════════
-
-    [System.Serializable]
-    public class WorldEntry
-    {
-        public string worldName = "World";
-        public int starsToUnlock;
-        public int levelsInWorld = 5;
-    }
-
-    public class WorldProgression : ScriptableObject
-    {
-        public List<WorldEntry> worlds = new List<WorldEntry>();
     }
 }

@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEditor;
+using ElementalSiege.Orbs;
+using ElementalSiege.Elements;
 
 namespace ElementalSiege.Editor
 {
@@ -11,18 +13,34 @@ namespace ElementalSiege.Editor
     [CustomEditor(typeof(OrbBase), true)]
     public class OrbBaseEditor : UnityEditor.Editor
     {
-        private static readonly Color[] ElementColors =
+        private static readonly Color[] CategoryColors =
         {
-            new Color(1f, 0.3f, 0.1f),   // Fire
+            new Color(0.6f, 0.4f, 0.2f),  // Stone
+            new Color(1f, 0.3f, 0.1f),    // Fire
             new Color(0.4f, 0.8f, 1f),    // Ice
             new Color(1f, 1f, 0.3f),      // Lightning
-            new Color(0.6f, 0.4f, 0.2f),  // Earth
             new Color(0.7f, 1f, 0.7f),    // Wind
-            new Color(0.2f, 0.4f, 1f),    // Water
             new Color(0.9f, 0.5f, 0.9f),  // Crystal
+            new Color(0.5f, 0.3f, 0.7f),  // Gravity
+            new Color(0.3f, 0.1f, 0.4f),  // Void
         };
 
+        private SerializedProperty _elementTypeProp;
+        private SerializedProperty _maxLifetimeProp;
+        private SerializedProperty _settleVelocityThresholdProp;
+        private SerializedProperty _settleTimeRequiredProp;
+        private SerializedProperty _trailRendererProp;
+
         private bool _showTrajectory = true;
+
+        private void OnEnable()
+        {
+            _elementTypeProp = serializedObject.FindProperty("elementType");
+            _maxLifetimeProp = serializedObject.FindProperty("maxLifetime");
+            _settleVelocityThresholdProp = serializedObject.FindProperty("settleVelocityThreshold");
+            _settleTimeRequiredProp = serializedObject.FindProperty("settleTimeRequired");
+            _trailRendererProp = serializedObject.FindProperty("trailRenderer");
+        }
 
         public override void OnInspectorGUI()
         {
@@ -30,7 +48,16 @@ namespace ElementalSiege.Editor
             var orb = (OrbBase)target;
 
             // ── Coloured header ──────────────────────────────────────
-            Color headerColor = GetElementColor(orb.elementIndex);
+            Color headerColor = Color.white;
+            string headerLabel = "Orb";
+
+            var elementType = orb.ElementType;
+            if (elementType != null)
+            {
+                headerColor = elementType.PrimaryColor;
+                headerLabel = elementType.ElementName + " Orb";
+            }
+
             Rect headerRect = EditorGUILayout.GetControlRect(false, 32);
             EditorGUI.DrawRect(headerRect, headerColor);
 
@@ -40,46 +67,73 @@ namespace ElementalSiege.Editor
                 alignment = TextAnchor.MiddleCenter,
                 normal = { textColor = Color.white }
             };
-            EditorGUI.LabelField(headerRect, orb.elementName, headerStyle);
+            EditorGUI.LabelField(headerRect, headerLabel, headerStyle);
 
             EditorGUILayout.Space(4);
 
-            // ── Element info ─────────────────────────────────────────
-            orb.elementName = EditorGUILayout.TextField("Element Name", orb.elementName);
-            orb.elementIndex = EditorGUILayout.IntSlider("Element Index", orb.elementIndex, 0, 6);
+            // ── Element Type reference ────────────────────────────────
+            EditorGUILayout.LabelField("Element Configuration", EditorStyles.boldLabel);
+            if (_elementTypeProp != null)
+                EditorGUILayout.PropertyField(_elementTypeProp, new GUIContent("Element Type"));
+
+            // Show element details if assigned
+            if (elementType != null)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("Category", elementType.Category.ToString());
+                EditorGUILayout.LabelField("Base Damage", elementType.BaseDamage.ToString("F1"));
+                EditorGUILayout.LabelField("Ability Radius", elementType.AbilityRadius.ToString("F1"));
+
+                if (elementType.Icon != null)
+                {
+                    Rect iconRect = EditorGUILayout.GetControlRect(false, 48);
+                    iconRect.width = 48;
+                    Texture2D tex = AssetPreview.GetAssetPreview(elementType.Icon);
+                    if (tex != null)
+                        GUI.DrawTexture(iconRect, tex, ScaleMode.ScaleToFit);
+                }
+                EditorGUI.indentLevel--;
+            }
 
             EditorGUILayout.Space(4);
 
-            // ── Ability description ──────────────────────────────────
-            EditorGUILayout.LabelField("Ability", EditorStyles.boldLabel);
-            orb.abilityName = EditorGUILayout.TextField("Name", orb.abilityName);
-
-            EditorGUILayout.LabelField("Description");
-            orb.abilityDescription = EditorGUILayout.TextArea(
-                orb.abilityDescription, GUILayout.Height(48));
-
-            EditorGUILayout.Space(4);
-
-            // ── Ability parameters ───────────────────────────────────
-            EditorGUILayout.LabelField("Parameters", EditorStyles.boldLabel);
-            orb.damage = EditorGUILayout.FloatField("Damage", orb.damage);
-            orb.radius = EditorGUILayout.FloatField("Effect Radius", orb.radius);
-            orb.launchForce = EditorGUILayout.FloatField("Launch Force", orb.launchForce);
-            orb.launchAngle = EditorGUILayout.Slider("Launch Angle", orb.launchAngle, 5f, 85f);
+            // ── Lifecycle parameters ──────────────────────────────────
+            EditorGUILayout.LabelField("Lifecycle", EditorStyles.boldLabel);
+            if (_maxLifetimeProp != null)
+                EditorGUILayout.PropertyField(_maxLifetimeProp, new GUIContent("Max Lifetime"));
+            if (_settleVelocityThresholdProp != null)
+                EditorGUILayout.PropertyField(_settleVelocityThresholdProp,
+                    new GUIContent("Settle Velocity Threshold"));
+            if (_settleTimeRequiredProp != null)
+                EditorGUILayout.PropertyField(_settleTimeRequiredProp,
+                    new GUIContent("Settle Time Required"));
 
             EditorGUILayout.Space(4);
 
-            // ── Trajectory preview toggle ────────────────────────────
+            // ── Trail ─────────────────────────────────────────────────
+            EditorGUILayout.LabelField("Trail", EditorStyles.boldLabel);
+            if (_trailRendererProp != null)
+                EditorGUILayout.PropertyField(_trailRendererProp, new GUIContent("Trail Renderer"));
+
+            EditorGUILayout.Space(4);
+
+            // ── Runtime state (read-only) ─────────────────────────────
+            EditorGUILayout.LabelField("Runtime State", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Current State", orb.CurrentState.ToString());
+
+            EditorGUILayout.Space(4);
+
+            // ── Trajectory preview toggle ─────────────────────────────
             _showTrajectory = EditorGUILayout.Toggle("Show Trajectory Preview", _showTrajectory);
 
             EditorGUILayout.Space(4);
 
-            // ── Test ability button (play mode only) ─────────────────
+            // ── Test ability button (play mode only) ──────────────────
             GUI.enabled = Application.isPlaying;
             if (GUILayout.Button("Test Ability", GUILayout.Height(28)))
             {
-                orb.SendMessage("ActivateAbility", SendMessageOptions.DontRequireReceiver);
-                Debug.Log("[OrbBaseEditor] Triggered ActivateAbility on " + orb.name);
+                orb.TryActivateAbility();
+                Debug.Log("[OrbBaseEditor] Triggered TryActivateAbility on " + orb.name);
             }
             GUI.enabled = true;
 
@@ -90,9 +144,6 @@ namespace ElementalSiege.Editor
             }
 
             serializedObject.ApplyModifiedProperties();
-
-            if (GUI.changed)
-                EditorUtility.SetDirty(target);
         }
 
         // ── Scene view trajectory ────────────────────────────────────
@@ -104,66 +155,25 @@ namespace ElementalSiege.Editor
             var orb = (OrbBase)target;
             if (orb == null) return;
 
+            var elementType = orb.ElementType;
+            float radius = elementType != null ? elementType.AbilityRadius : 1f;
+            int categoryIndex = elementType != null ? (int)elementType.Category : 0;
+
             Vector3 origin = orb.transform.position;
-            float force = orb.launchForce;
-            float angle = orb.launchAngle * Mathf.Deg2Rad;
-            float gravity = Physics.gravity.magnitude;
 
-            Vector3 forward = orb.transform.forward;
-            Vector3 velocity = forward * Mathf.Cos(angle) * force +
-                               Vector3.up * Mathf.Sin(angle) * force;
+            Handles.color = GetCategoryColor(categoryIndex);
 
-            int steps = 60;
-            float dt = 0.05f;
-            Vector3 prev = origin;
-
-            Handles.color = GetElementColor(orb.elementIndex);
-
-            for (int i = 1; i <= steps; i++)
-            {
-                float t = i * dt;
-                Vector3 pos = origin + velocity * t +
-                              0.5f * Physics.gravity * t * t;
-
-                Handles.DrawLine(prev, pos);
-
-                // Impact point marker
-                if (pos.y < origin.y - 0.1f)
-                {
-                    Handles.DrawWireDisc(pos, Vector3.up, orb.radius);
-                    break;
-                }
-
-                prev = pos;
-            }
-
-            // Draw radius at origin
+            // Draw ability radius at origin
             Handles.color = new Color(Handles.color.r, Handles.color.g,
                 Handles.color.b, 0.3f);
-            Handles.DrawWireDisc(origin, Vector3.up, orb.radius);
+            Handles.DrawWireDisc(origin, Vector3.forward, radius);
         }
 
-        private Color GetElementColor(int index)
+        private Color GetCategoryColor(int index)
         {
-            if (index >= 0 && index < ElementColors.Length)
-                return ElementColors[index];
+            if (index >= 0 && index < CategoryColors.Length)
+                return CategoryColors[index];
             return Color.white;
         }
-    }
-
-    // ══════════════════════════════════════════════════════════════════
-    // Stub runtime type — replace with actual game assembly reference
-    // ══════════════════════════════════════════════════════════════════
-
-    public class OrbBase : MonoBehaviour
-    {
-        public string elementName = "Fire";
-        public int elementIndex;
-        public string abilityName = "Fireball";
-        public string abilityDescription = "Explodes on impact, dealing fire damage.";
-        public float damage = 25f;
-        public float radius = 3f;
-        public float launchForce = 20f;
-        public float launchAngle = 45f;
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using ElementalSiege.Elements;
 
 namespace ElementalSiege.Editor
 {
@@ -11,6 +12,37 @@ namespace ElementalSiege.Editor
     [CustomEditor(typeof(ElementType))]
     public class ElementTypeEditor : UnityEditor.Editor
     {
+        private SerializedProperty _elementNameProp;
+        private SerializedProperty _categoryProp;
+        private SerializedProperty _descriptionProp;
+        private SerializedProperty _primaryColorProp;
+        private SerializedProperty _secondaryColorProp;
+        private SerializedProperty _iconProp;
+        private SerializedProperty _orbPrefabProp;
+        private SerializedProperty _impactEffectPrefabProp;
+        private SerializedProperty _launchSoundProp;
+        private SerializedProperty _impactSoundProp;
+        private SerializedProperty _abilitySoundProp;
+        private SerializedProperty _baseDamageProp;
+        private SerializedProperty _abilityRadiusProp;
+
+        private void OnEnable()
+        {
+            _elementNameProp = serializedObject.FindProperty("elementName");
+            _categoryProp = serializedObject.FindProperty("category");
+            _descriptionProp = serializedObject.FindProperty("description");
+            _primaryColorProp = serializedObject.FindProperty("primaryColor");
+            _secondaryColorProp = serializedObject.FindProperty("secondaryColor");
+            _iconProp = serializedObject.FindProperty("icon");
+            _orbPrefabProp = serializedObject.FindProperty("orbPrefab");
+            _impactEffectPrefabProp = serializedObject.FindProperty("impactEffectPrefab");
+            _launchSoundProp = serializedObject.FindProperty("launchSound");
+            _impactSoundProp = serializedObject.FindProperty("impactSound");
+            _abilitySoundProp = serializedObject.FindProperty("abilitySound");
+            _baseDamageProp = serializedObject.FindProperty("baseDamage");
+            _abilityRadiusProp = serializedObject.FindProperty("abilityRadius");
+        }
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -18,7 +50,12 @@ namespace ElementalSiege.Editor
 
             // ── Header with element name ─────────────────────────────
             EditorGUILayout.LabelField("Element Type", EditorStyles.boldLabel);
-            element.elementName = EditorGUILayout.TextField("Name", element.elementName);
+            if (_elementNameProp != null)
+                EditorGUILayout.PropertyField(_elementNameProp, new GUIContent("Name"));
+            if (_categoryProp != null)
+                EditorGUILayout.PropertyField(_categoryProp, new GUIContent("Category"));
+            if (_descriptionProp != null)
+                EditorGUILayout.PropertyField(_descriptionProp, new GUIContent("Description"));
 
             EditorGUILayout.Space(4);
 
@@ -31,9 +68,10 @@ namespace ElementalSiege.Editor
                 EditorGUILayout.BeginVertical();
                 EditorGUILayout.LabelField("Primary", GUILayout.Width(70));
                 Rect primaryRect = EditorGUILayout.GetControlRect(false, 48, GUILayout.Width(80));
-                EditorGUI.DrawRect(primaryRect, element.primaryColor);
-                element.primaryColor = EditorGUILayout.ColorField(element.primaryColor,
-                    GUILayout.Width(80));
+                EditorGUI.DrawRect(primaryRect, element.PrimaryColor);
+                if (_primaryColorProp != null)
+                    EditorGUILayout.PropertyField(_primaryColorProp, GUIContent.none,
+                        GUILayout.Width(80));
                 EditorGUILayout.EndVertical();
 
                 GUILayout.Space(8);
@@ -42,9 +80,10 @@ namespace ElementalSiege.Editor
                 EditorGUILayout.BeginVertical();
                 EditorGUILayout.LabelField("Secondary", GUILayout.Width(70));
                 Rect secondaryRect = EditorGUILayout.GetControlRect(false, 48, GUILayout.Width(80));
-                EditorGUI.DrawRect(secondaryRect, element.secondaryColor);
-                element.secondaryColor = EditorGUILayout.ColorField(element.secondaryColor,
-                    GUILayout.Width(80));
+                EditorGUI.DrawRect(secondaryRect, element.SecondaryColor);
+                if (_secondaryColorProp != null)
+                    EditorGUILayout.PropertyField(_secondaryColorProp, GUIContent.none,
+                        GUILayout.Width(80));
                 EditorGUILayout.EndVertical();
             }
             EditorGUILayout.EndHorizontal();
@@ -53,14 +92,14 @@ namespace ElementalSiege.Editor
 
             // ── Icon preview ─────────────────────────────────────────
             EditorGUILayout.LabelField("Icon", EditorStyles.boldLabel);
-            element.icon = (Sprite)EditorGUILayout.ObjectField(
-                "Icon Sprite", element.icon, typeof(Sprite), false);
+            if (_iconProp != null)
+                EditorGUILayout.PropertyField(_iconProp, new GUIContent("Icon Sprite"));
 
-            if (element.icon != null)
+            if (element.Icon != null)
             {
                 Rect iconRect = EditorGUILayout.GetControlRect(false, 64);
                 iconRect.width = 64;
-                Texture2D tex = AssetPreview.GetAssetPreview(element.icon);
+                Texture2D tex = AssetPreview.GetAssetPreview(element.Icon);
                 if (tex != null)
                     GUI.DrawTexture(iconRect, tex, ScaleMode.ScaleToFit);
             }
@@ -69,28 +108,44 @@ namespace ElementalSiege.Editor
 
             // ── Stats overview ───────────────────────────────────────
             EditorGUILayout.LabelField("Stats", EditorStyles.boldLabel);
-            element.baseDamage = EditorGUILayout.FloatField("Base Damage", element.baseDamage);
-            element.effectRadius = EditorGUILayout.FloatField("Effect Radius", element.effectRadius);
+            if (_baseDamageProp != null)
+                EditorGUILayout.PropertyField(_baseDamageProp, new GUIContent("Base Damage"));
+            if (_abilityRadiusProp != null)
+                EditorGUILayout.PropertyField(_abilityRadiusProp, new GUIContent("Ability Radius"));
 
             // Visual stat bars
-            DrawStatBar("Damage", element.baseDamage, 100f, Color.red);
-            DrawStatBar("Radius", element.effectRadius, 20f, Color.cyan);
+            DrawStatBar("Damage", element.BaseDamage, 100f, Color.red);
+            DrawStatBar("Radius", element.AbilityRadius, 20f, Color.cyan);
 
             EditorGUILayout.Space(4);
 
-            // ── Associated prefab ────────────────────────────────────
-            EditorGUILayout.LabelField("Prefab", EditorStyles.boldLabel);
-            element.orbPrefab = (GameObject)EditorGUILayout.ObjectField(
-                "Orb Prefab", element.orbPrefab, typeof(GameObject), false);
+            // ── Prefabs ──────────────────────────────────────────────
+            EditorGUILayout.LabelField("Prefabs", EditorStyles.boldLabel);
+            if (_orbPrefabProp != null)
+                EditorGUILayout.PropertyField(_orbPrefabProp, new GUIContent("Orb Prefab"));
+            if (_impactEffectPrefabProp != null)
+                EditorGUILayout.PropertyField(_impactEffectPrefabProp,
+                    new GUIContent("Impact Effect Prefab"));
 
-            if (element.orbPrefab != null)
+            if (element.OrbPrefab != null)
             {
                 if (GUILayout.Button("Select Prefab in Project", GUILayout.Height(22)))
                 {
-                    EditorGUIUtility.PingObject(element.orbPrefab);
-                    Selection.activeObject = element.orbPrefab;
+                    EditorGUIUtility.PingObject(element.OrbPrefab);
+                    Selection.activeObject = element.OrbPrefab;
                 }
             }
+
+            EditorGUILayout.Space(4);
+
+            // ── Audio ────────────────────────────────────────────────
+            EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
+            if (_launchSoundProp != null)
+                EditorGUILayout.PropertyField(_launchSoundProp, new GUIContent("Launch Sound"));
+            if (_impactSoundProp != null)
+                EditorGUILayout.PropertyField(_impactSoundProp, new GUIContent("Impact Sound"));
+            if (_abilitySoundProp != null)
+                EditorGUILayout.PropertyField(_abilitySoundProp, new GUIContent("Ability Sound"));
 
             EditorGUILayout.Space(8);
 
@@ -101,9 +156,6 @@ namespace ElementalSiege.Editor
             }
 
             serializedObject.ApplyModifiedProperties();
-
-            if (GUI.changed)
-                EditorUtility.SetDirty(target);
         }
 
         private void DrawStatBar(string label, float value, float maxValue, Color color)
@@ -127,9 +179,9 @@ namespace ElementalSiege.Editor
         {
             GameObject testOrb;
 
-            if (element.orbPrefab != null)
+            if (element.OrbPrefab != null)
             {
-                testOrb = (GameObject)PrefabUtility.InstantiatePrefab(element.orbPrefab);
+                testOrb = (GameObject)PrefabUtility.InstantiatePrefab(element.OrbPrefab);
             }
             else
             {
@@ -138,12 +190,12 @@ namespace ElementalSiege.Editor
                 if (renderer != null)
                 {
                     var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                    mat.color = element.primaryColor;
+                    mat.color = element.PrimaryColor;
                     renderer.sharedMaterial = mat;
                 }
             }
 
-            testOrb.name = "[Preview] " + element.elementName + " Orb";
+            testOrb.name = "[Preview] " + element.ElementName + " Orb";
 
             // Place in front of scene camera
             SceneView sceneView = SceneView.lastActiveSceneView;
@@ -160,23 +212,8 @@ namespace ElementalSiege.Editor
             Undo.RegisterCreatedObjectUndo(testOrb, "Preview Element Orb");
             Selection.activeGameObject = testOrb;
 
-            Debug.Log($"[ElementTypeEditor] Spawned preview orb for '{element.elementName}'. " +
+            Debug.Log($"[ElementTypeEditor] Spawned preview orb for '{element.ElementName}'. " +
                       "Delete it when done.");
         }
-    }
-
-    // ══════════════════════════════════════════════════════════════════
-    // Stub runtime type — replace with actual game assembly reference
-    // ══════════════════════════════════════════════════════════════════
-
-    public class ElementType : ScriptableObject
-    {
-        public string elementName = "Fire";
-        public Color primaryColor = new Color(1f, 0.3f, 0.1f);
-        public Color secondaryColor = new Color(1f, 0.6f, 0.2f);
-        public Sprite icon;
-        public float baseDamage = 25f;
-        public float effectRadius = 3f;
-        public GameObject orbPrefab;
     }
 }

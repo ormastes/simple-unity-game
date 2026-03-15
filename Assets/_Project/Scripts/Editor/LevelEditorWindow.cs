@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using ElementalSiege.Core;
+using ElementalSiege.Elements;
+using ElementalSiege.Structures;
 
 namespace ElementalSiege.Editor
 {
@@ -39,7 +42,7 @@ namespace ElementalSiege.Editor
         private static readonly float[] Rotations = { 0f, 90f, 180f, 270f };
 
         // Level settings
-        private Object _levelDataRef;
+        private CoreLevelData _levelDataRef;
         private string[] _orbNames = { "Fire", "Ice", "Lightning", "Earth", "Wind", "Water" };
         private bool[] _orbSelection = new bool[6];
         private int _star1Threshold = 1000;
@@ -113,8 +116,8 @@ namespace ElementalSiege.Editor
 
             EditorGUILayout.LabelField("Level Settings", EditorStyles.boldLabel);
 
-            _levelDataRef = EditorGUILayout.ObjectField(
-                "Level Data", _levelDataRef, typeof(ScriptableObject), false);
+            _levelDataRef = (CoreLevelData)EditorGUILayout.ObjectField(
+                "Level Data", _levelDataRef, typeof(CoreLevelData), false);
 
             EditorGUILayout.Space(4);
             EditorGUILayout.LabelField("Orb Selection", EditorStyles.boldLabel);

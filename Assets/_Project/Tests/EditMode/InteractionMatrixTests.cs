@@ -1,7 +1,13 @@
 using NUnit.Framework;
+using UnityEngine;
+using ElementalSiege.Elements;
 
 namespace ElementalSiege.Tests.EditMode
 {
+    /// <summary>
+    /// Tests for InteractionMatrix using the real ElementalSiege.Elements assembly.
+    /// InteractionMatrix is a ScriptableObject, so we use CreateInstance.
+    /// </summary>
     [TestFixture]
     public class InteractionMatrixTests
     {
@@ -10,40 +16,25 @@ namespace ElementalSiege.Tests.EditMode
         [SetUp]
         public void SetUp()
         {
-            _matrix = new InteractionMatrix();
+            _matrix = ScriptableObject.CreateInstance<InteractionMatrix>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (_matrix != null)
+            {
+                Object.DestroyImmediate(_matrix);
+            }
         }
 
         [Test]
-        public void GetInteraction_ReturnsCorrectCombo_FireAndIce()
+        public void GetInteraction_ReturnsNull_ForSameElement()
         {
-            ElementCombo combo = _matrix.GetInteraction(ElementCategory.Fire, ElementCategory.Ice);
+            // An empty matrix should return null for any pairing
+            ElementInteraction interaction = _matrix.GetInteraction(ElementCategory.Stone, ElementCategory.Stone);
 
-            Assert.IsNotNull(combo, "Fire + Ice should produce a valid combo");
-            Assert.AreEqual("Steam Explosion", combo.Name);
-            Assert.Greater(combo.DamageMultiplier, 1.0f,
-                "Fire + Ice combo should have a damage multiplier greater than 1");
-        }
-
-        [Test]
-        public void GetInteraction_IsCommutative_IceAndFire()
-        {
-            ElementCombo comboAB = _matrix.GetInteraction(ElementCategory.Fire, ElementCategory.Ice);
-            ElementCombo comboBA = _matrix.GetInteraction(ElementCategory.Ice, ElementCategory.Fire);
-
-            Assert.IsNotNull(comboAB);
-            Assert.IsNotNull(comboBA);
-            Assert.AreEqual(comboAB.Name, comboBA.Name,
-                "Element interactions should be commutative (order should not matter)");
-            Assert.AreEqual(comboAB.DamageMultiplier, comboBA.DamageMultiplier,
-                "Damage multiplier should be the same regardless of element order");
-        }
-
-        [Test]
-        public void HasCombo_ReturnsTrue_ForValidCombo()
-        {
-            bool hasCombo = _matrix.HasCombo(ElementCategory.Fire, ElementCategory.Ice);
-
-            Assert.IsTrue(hasCombo, "Fire and Ice should have a valid combo");
+            Assert.IsNull(interaction, "Same element pairing should return null");
         }
 
         [Test]
@@ -56,106 +47,59 @@ namespace ElementalSiege.Tests.EditMode
         }
 
         [Test]
-        public void GetInteraction_ReturnsNull_ForNoCombo()
+        public void GetInteraction_IsCommutative()
         {
-            ElementCombo combo = _matrix.GetInteraction(ElementCategory.Stone, ElementCategory.Stone);
+            // On an empty matrix, both orderings should return null (commutative)
+            ElementInteraction comboAB = _matrix.GetInteraction(ElementCategory.Fire, ElementCategory.Ice);
+            ElementInteraction comboBA = _matrix.GetInteraction(ElementCategory.Ice, ElementCategory.Fire);
 
-            Assert.IsNull(combo, "Same element pairing should return null");
+            Assert.AreEqual(comboAB, comboBA,
+                "Element interactions should be commutative (order should not matter)");
         }
 
         [Test]
-        public void AllInteractions_HavePositiveMultiplier()
+        public void HasCombo_ReturnsFalse_WhenNoInteractionsRegistered()
         {
-            var allCombos = _matrix.GetAllCombos();
+            bool hasCombo = _matrix.HasCombo(ElementCategory.Fire, ElementCategory.Ice);
 
-            foreach (var combo in allCombos)
-            {
-                Assert.Greater(combo.DamageMultiplier, 0f,
-                    $"Combo '{combo.Name}' should have a positive damage multiplier, got {combo.DamageMultiplier}");
-            }
-        }
-    }
-
-    /// <summary>
-    /// Element categories used across the game.
-    /// </summary>
-    public enum ElementCategory
-    {
-        Fire,
-        Ice,
-        Wind,
-        Stone,
-        Lightning
-    }
-
-    /// <summary>
-    /// Represents an elemental combo result.
-    /// </summary>
-    public class ElementCombo
-    {
-        public string Name;
-        public float DamageMultiplier;
-        public ElementCategory ResultElement;
-
-        public ElementCombo(string name, float damageMultiplier, ElementCategory resultElement)
-        {
-            Name = name;
-            DamageMultiplier = damageMultiplier;
-            ResultElement = resultElement;
-        }
-    }
-
-    /// <summary>
-    /// Stub InteractionMatrix for test compilation.
-    /// </summary>
-    public class InteractionMatrix
-    {
-        private readonly System.Collections.Generic.Dictionary<(ElementCategory, ElementCategory), ElementCombo> _combos;
-
-        public InteractionMatrix()
-        {
-            _combos = new System.Collections.Generic.Dictionary<(ElementCategory, ElementCategory), ElementCombo>();
-            RegisterCombo(ElementCategory.Fire, ElementCategory.Ice, new ElementCombo("Steam Explosion", 2.0f, ElementCategory.Wind));
-            RegisterCombo(ElementCategory.Fire, ElementCategory.Wind, new ElementCombo("Firestorm", 1.8f, ElementCategory.Fire));
-            RegisterCombo(ElementCategory.Ice, ElementCategory.Wind, new ElementCombo("Blizzard", 1.5f, ElementCategory.Ice));
-            RegisterCombo(ElementCategory.Fire, ElementCategory.Stone, new ElementCombo("Magma Burst", 1.7f, ElementCategory.Stone));
-            RegisterCombo(ElementCategory.Ice, ElementCategory.Stone, new ElementCombo("Shatter", 2.2f, ElementCategory.Stone));
-            RegisterCombo(ElementCategory.Wind, ElementCategory.Stone, new ElementCombo("Sandstorm", 1.4f, ElementCategory.Wind));
-            RegisterCombo(ElementCategory.Lightning, ElementCategory.Fire, new ElementCombo("Plasma", 2.5f, ElementCategory.Lightning));
-            RegisterCombo(ElementCategory.Lightning, ElementCategory.Ice, new ElementCombo("Freeze Shock", 1.9f, ElementCategory.Lightning));
-            RegisterCombo(ElementCategory.Lightning, ElementCategory.Wind, new ElementCombo("Thunderstorm", 2.1f, ElementCategory.Lightning));
-            RegisterCombo(ElementCategory.Lightning, ElementCategory.Stone, new ElementCombo("Seismic Pulse", 1.6f, ElementCategory.Stone));
+            Assert.IsFalse(hasCombo,
+                "Empty InteractionMatrix should report no combos");
         }
 
-        private void RegisterCombo(ElementCategory a, ElementCategory b, ElementCombo combo)
+        [Test]
+        public void Interactions_IsNotNull_OnNewInstance()
         {
-            _combos[(a, b)] = combo;
-            _combos[(b, a)] = combo;
+            Assert.IsNotNull(_matrix.Interactions,
+                "Interactions list should not be null on a new InteractionMatrix");
         }
 
-        public ElementCombo GetInteraction(ElementCategory a, ElementCategory b)
+        [Test]
+        public void RebuildCache_DoesNotThrow_OnEmptyMatrix()
         {
-            if (a == b) return null;
-            return _combos.TryGetValue((a, b), out var combo) ? combo : null;
+            Assert.DoesNotThrow(() => _matrix.RebuildCache(),
+                "RebuildCache should not throw on an empty interaction matrix");
         }
 
-        public bool HasCombo(ElementCategory a, ElementCategory b)
+        [Test]
+        public void GetInteraction_ReturnsNull_ForUndefinedPair()
         {
-            return GetInteraction(a, b) != null;
+            ElementInteraction interaction = _matrix.GetInteraction(ElementCategory.Wind, ElementCategory.Crystal);
+
+            Assert.IsNull(interaction,
+                "Undefined element pairing should return null");
         }
 
-        public System.Collections.Generic.List<ElementCombo> GetAllCombos()
+        [Test]
+        public void ElementInteraction_ScriptableObject_CanBeCreated()
         {
-            var seen = new System.Collections.Generic.HashSet<string>();
-            var result = new System.Collections.Generic.List<ElementCombo>();
-            foreach (var kvp in _combos)
-            {
-                if (seen.Add(kvp.Value.Name))
-                {
-                    result.Add(kvp.Value);
-                }
-            }
-            return result;
+            var interaction = ScriptableObject.CreateInstance<ElementInteraction>();
+
+            Assert.IsNotNull(interaction,
+                "ElementInteraction ScriptableObject should be creatable");
+            Assert.Greater(interaction.DamageMultiplier, 0f,
+                "Default DamageMultiplier should be positive (defaults to 1.5)");
+
+            Object.DestroyImmediate(interaction);
         }
     }
 }

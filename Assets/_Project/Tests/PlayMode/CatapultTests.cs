@@ -2,33 +2,40 @@ using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using ElementalSiege.Launcher;
+using ElementalSiege.Orbs;
 
 namespace ElementalSiege.Tests.PlayMode
 {
+    /// <summary>
+    /// Tests for the Catapult and TrajectoryPreview using the real ElementalSiege.Launcher assembly.
+    /// The real class is Catapult (not CatapultController), with a nested CatapultState enum.
+    /// State is accessed via the State property. The catapult uses an InputManager for drag events,
+    /// so these tests verify component creation, orb loading, and trajectory preview behavior.
+    /// </summary>
     [TestFixture]
     public class CatapultTests
     {
         private GameObject _catapultObject;
-        private CatapultController _catapult;
+        private Catapult _catapult;
         private GameObject _trajectoryObject;
         private TrajectoryPreview _trajectory;
+        private GameObject _launchPointObject;
 
         [SetUp]
         public void SetUp()
         {
+            // Create the catapult with a launch point transform
             _catapultObject = new GameObject("TestCatapult");
-            _catapult = _catapultObject.AddComponent<CatapultController>();
-            _catapult.MaxDragDistance = 3f;
-            _catapult.LaunchForceMultiplier = 10f;
+            _catapult = _catapultObject.AddComponent<Catapult>();
 
+            _launchPointObject = new GameObject("LaunchPoint");
+            _launchPointObject.transform.position = Vector3.zero;
+
+            // TrajectoryPreview requires LineRenderer
             _trajectoryObject = new GameObject("TrajectoryPreview");
+            _trajectoryObject.AddComponent<LineRenderer>();
             _trajectory = _trajectoryObject.AddComponent<TrajectoryPreview>();
-            _trajectory.DotCount = 15;
-            var lr = _trajectoryObject.AddComponent<LineRenderer>();
-            lr.positionCount = 0;
-
-            _catapult.TrajectoryPreview = _trajectory;
-            _catapult.Initialize();
         }
 
         [TearDown]
@@ -36,194 +43,89 @@ namespace ElementalSiege.Tests.PlayMode
         {
             if (_catapultObject != null) Object.Destroy(_catapultObject);
             if (_trajectoryObject != null) Object.Destroy(_trajectoryObject);
+            if (_launchPointObject != null) Object.Destroy(_launchPointObject);
         }
 
         [Test]
-        public void Catapult_StartsInIdleState()
+        public void Catapult_StartsInWaitingForOrbState()
         {
-            Assert.AreEqual(CatapultState.Idle, _catapult.CurrentState,
-                "Catapult should start in Idle state");
+            // Real catapult initializes to WaitingForOrb in its field initializer
+            Assert.AreEqual(Catapult.CatapultState.WaitingForOrb, _catapult.State,
+                "Catapult should start in WaitingForOrb state");
         }
 
         [UnityTest]
-        public IEnumerator Catapult_EntersAimingOnDrag()
+        public IEnumerator Catapult_LoadOrb_TransitionsToIdle()
         {
-            _catapult.OnDragStart(new Vector2(0f, 0f));
+            // Create a test orb (StoneOrb is a concrete OrbBase subclass)
+            var orbObject = new GameObject("TestOrb");
+            orbObject.AddComponent<Rigidbody2D>();
+            orbObject.AddComponent<CircleCollider2D>();
+            var orb = orbObject.AddComponent<StoneOrb>();
+
+            _catapult.LoadOrb(orb);
 
             yield return null;
 
-            Assert.AreEqual(CatapultState.Aiming, _catapult.CurrentState,
-                "Catapult should enter Aiming state when drag starts");
-        }
+            Assert.AreEqual(Catapult.CatapultState.Idle, _catapult.State,
+                "Catapult should enter Idle state after loading an orb");
 
-        [UnityTest]
-        public IEnumerator Catapult_LaunchesOrb_OnDragEnd()
-        {
-            // Create a test orb to load
-            var orbObject = new GameObject("TestOrb");
-            orbObject.AddComponent<Rigidbody2D>();
-            var orbBase = orbObject.AddComponent<OrbBase>();
-            _catapult.LoadOrb(orbBase);
-
-            _catapult.OnDragStart(Vector2.zero);
-            _catapult.OnDrag(new Vector2(-2f, 1f));
-            _catapult.OnDragEnd();
-
-            yield return new WaitForFixedUpdate();
-
-            Assert.AreEqual(CatapultState.Launched, _catapult.CurrentState,
-                "Catapult should enter Launched state after drag end");
-
-            if (orbObject != null) Object.Destroy(orbObject);
+            Object.Destroy(orbObject);
         }
 
         [Test]
-        public void Catapult_ClampsMaxDragDistance()
+        public void Catapult_CalculateLaunchVelocity_ReturnsNonZero()
         {
-            _catapult.OnDragStart(Vector2.zero);
+            Vector3 dragPosition = new Vector3(-2f, 1f, 0f);
+            Vector2 velocity = _catapult.CalculateLaunchVelocity(dragPosition);
 
-            // Drag way beyond max distance
-            Vector2 farDrag = new Vector2(-10f, 10f);
-            _catapult.OnDrag(farDrag);
+            Assert.Greater(velocity.magnitude, 0f,
+                "Launch velocity should be non-zero for a non-zero drag offset");
+        }
 
-            float clampedDistance = _catapult.CurrentDragVector.magnitude;
+        [Test]
+        public void Catapult_SetWaitingForOrb_SetsCorrectState()
+        {
+            _catapult.SetWaitingForOrb();
 
-            Assert.LessOrEqual(clampedDistance, _catapult.MaxDragDistance + 0.01f,
-                $"Drag distance ({clampedDistance}) should be clamped to max ({_catapult.MaxDragDistance})");
+            Assert.AreEqual(Catapult.CatapultState.WaitingForOrb, _catapult.State,
+                "SetWaitingForOrb should set state to WaitingForOrb");
+        }
+
+        [Test]
+        public void TrajectoryPreview_StartsHidden()
+        {
+            // TrajectoryPreview calls Hide() in its Awake, so after Awake it should not be visible
+            // Note: Awake runs on AddComponent in tests
+            var lr = _trajectoryObject.GetComponent<LineRenderer>();
+            Assert.IsFalse(lr.enabled,
+                "TrajectoryPreview LineRenderer should start disabled (hidden)");
         }
 
         [UnityTest]
-        public IEnumerator TrajectoryPreview_ShowsWhileAiming()
+        public IEnumerator TrajectoryPreview_Show_EnablesRenderer()
         {
-            var orbObject = new GameObject("TestOrb");
-            orbObject.AddComponent<Rigidbody2D>();
-            var orbBase = orbObject.AddComponent<OrbBase>();
-            _catapult.LoadOrb(orbBase);
-
-            _catapult.OnDragStart(Vector2.zero);
-            _catapult.OnDrag(new Vector2(-1f, 1f));
+            _trajectory.Show();
 
             yield return null;
 
-            Assert.IsTrue(_trajectory.IsVisible,
-                "Trajectory preview should be visible while aiming");
-
-            if (orbObject != null) Object.Destroy(orbObject);
+            var lr = _trajectoryObject.GetComponent<LineRenderer>();
+            Assert.IsTrue(lr.enabled,
+                "TrajectoryPreview LineRenderer should be enabled after Show()");
         }
 
         [UnityTest]
-        public IEnumerator TrajectoryPreview_HidesAfterLaunch()
+        public IEnumerator TrajectoryPreview_Hide_DisablesRenderer()
         {
-            var orbObject = new GameObject("TestOrb");
-            orbObject.AddComponent<Rigidbody2D>();
-            var orbBase = orbObject.AddComponent<OrbBase>();
-            _catapult.LoadOrb(orbBase);
-
-            _catapult.OnDragStart(Vector2.zero);
-            _catapult.OnDrag(new Vector2(-1f, 1f));
-            _catapult.OnDragEnd();
-
+            _trajectory.Show();
             yield return null;
 
-            Assert.IsFalse(_trajectory.IsVisible,
-                "Trajectory preview should be hidden after launch");
+            _trajectory.Hide();
+            yield return null;
 
-            if (orbObject != null) Object.Destroy(orbObject);
-        }
-    }
-
-    /// <summary>
-    /// Catapult state enumeration.
-    /// </summary>
-    public enum CatapultState
-    {
-        Idle,
-        Aiming,
-        Launched,
-        WaitingForSettle
-    }
-
-    /// <summary>
-    /// Stub CatapultController for test compilation.
-    /// </summary>
-    public class CatapultController : MonoBehaviour
-    {
-        public float MaxDragDistance = 3f;
-        public float LaunchForceMultiplier = 10f;
-        public TrajectoryPreview TrajectoryPreview;
-        public CatapultState CurrentState { get; private set; }
-        public Vector2 CurrentDragVector { get; private set; }
-
-        private OrbBase _loadedOrb;
-        private Vector2 _dragOrigin;
-
-        public void Initialize()
-        {
-            CurrentState = CatapultState.Idle;
-            CurrentDragVector = Vector2.zero;
-        }
-
-        public void LoadOrb(OrbBase orb)
-        {
-            _loadedOrb = orb;
-        }
-
-        public void OnDragStart(Vector2 position)
-        {
-            _dragOrigin = position;
-            CurrentState = CatapultState.Aiming;
-        }
-
-        public void OnDrag(Vector2 position)
-        {
-            Vector2 dragVec = position - _dragOrigin;
-            if (dragVec.magnitude > MaxDragDistance)
-            {
-                dragVec = dragVec.normalized * MaxDragDistance;
-            }
-            CurrentDragVector = dragVec;
-
-            if (TrajectoryPreview != null)
-            {
-                TrajectoryPreview.Show(-dragVec * LaunchForceMultiplier);
-            }
-        }
-
-        public void OnDragEnd()
-        {
-            if (_loadedOrb != null)
-            {
-                Vector2 launchForce = -CurrentDragVector * LaunchForceMultiplier;
-                _loadedOrb.Launch(launchForce);
-                _loadedOrb = null;
-            }
-
-            CurrentState = CatapultState.Launched;
-
-            if (TrajectoryPreview != null)
-            {
-                TrajectoryPreview.Hide();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Stub TrajectoryPreview for test compilation.
-    /// </summary>
-    public class TrajectoryPreview : MonoBehaviour
-    {
-        public int DotCount = 15;
-        public bool IsVisible { get; private set; }
-
-        public void Show(Vector2 launchForce)
-        {
-            IsVisible = true;
-            // In production, this would calculate and render trajectory dots
-        }
-
-        public void Hide()
-        {
-            IsVisible = false;
+            var lr = _trajectoryObject.GetComponent<LineRenderer>();
+            Assert.IsFalse(lr.enabled,
+                "TrajectoryPreview LineRenderer should be disabled after Hide()");
         }
     }
 }

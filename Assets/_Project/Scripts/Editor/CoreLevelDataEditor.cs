@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
-using System.Collections.Generic;
+using ElementalSiege.Core;
+using ElementalSiege.Elements;
 
 namespace ElementalSiege.Editor
 {
@@ -14,29 +15,35 @@ namespace ElementalSiege.Editor
     public class CoreLevelDataEditor : UnityEditor.Editor
     {
         private ReorderableList _orbList;
-        private SerializedProperty _orbsProp;
-        private SerializedProperty _star1Prop;
-        private SerializedProperty _star2Prop;
-        private SerializedProperty _star3Prop;
-        private SerializedProperty _sceneNameProp;
+        private SerializedProperty _availableOrbsProp;
+        private SerializedProperty _starThresholdsProp;
         private SerializedProperty _levelNameProp;
+        private SerializedProperty _levelIdProp;
+        private SerializedProperty _worldIndexProp;
+        private SerializedProperty _levelIndexProp;
+        private SerializedProperty _difficultyProp;
+        private SerializedProperty _levelBoundsProp;
+        private SerializedProperty _tutorialIdProp;
         private Texture2D _thumbnailCache;
 
         private void OnEnable()
         {
-            _orbsProp = serializedObject.FindProperty("orbs");
-            _star1Prop = serializedObject.FindProperty("starThreshold1");
-            _star2Prop = serializedObject.FindProperty("starThreshold2");
-            _star3Prop = serializedObject.FindProperty("starThreshold3");
-            _sceneNameProp = serializedObject.FindProperty("sceneName");
-            _levelNameProp = serializedObject.FindProperty("levelName");
+            _levelIdProp = serializedObject.FindProperty("_levelId");
+            _levelNameProp = serializedObject.FindProperty("_levelName");
+            _worldIndexProp = serializedObject.FindProperty("_worldIndex");
+            _levelIndexProp = serializedObject.FindProperty("_levelIndex");
+            _availableOrbsProp = serializedObject.FindProperty("_availableOrbs");
+            _starThresholdsProp = serializedObject.FindProperty("_starThresholds");
+            _difficultyProp = serializedObject.FindProperty("_difficulty");
+            _levelBoundsProp = serializedObject.FindProperty("_levelBounds");
+            _tutorialIdProp = serializedObject.FindProperty("_tutorialId");
 
-            if (_orbsProp != null)
+            if (_availableOrbsProp != null)
             {
-                _orbList = new ReorderableList(serializedObject, _orbsProp,
+                _orbList = new ReorderableList(serializedObject, _availableOrbsProp,
                     true, true, true, true);
                 _orbList.drawHeaderCallback = rect =>
-                    EditorGUI.LabelField(rect, "Orbs (drag to reorder)");
+                    EditorGUI.LabelField(rect, "Available Orbs (drag to reorder)");
                 _orbList.drawElementCallback = DrawOrbElement;
             }
         }
@@ -51,12 +58,21 @@ namespace ElementalSiege.Editor
             EditorGUILayout.LabelField("Core Level Data", EditorStyles.boldLabel);
             EditorGUILayout.Space(4);
 
+            // ── Identity section ─────────────────────────────────────
+            EditorGUILayout.LabelField("Identity", EditorStyles.boldLabel);
+            if (_levelIdProp != null)
+                EditorGUILayout.PropertyField(_levelIdProp, new GUIContent("Level ID"));
+            if (_levelNameProp != null)
+                EditorGUILayout.PropertyField(_levelNameProp, new GUIContent("Level Name"));
+            if (_worldIndexProp != null)
+                EditorGUILayout.PropertyField(_worldIndexProp, new GUIContent("World Index"));
+            if (_levelIndexProp != null)
+                EditorGUILayout.PropertyField(_levelIndexProp, new GUIContent("Level Index"));
+
+            EditorGUILayout.Space(4);
+
             // ── Preview section ──────────────────────────────────────
             EditorGUILayout.LabelField("Preview", EditorStyles.boldLabel);
-            if (_levelNameProp != null)
-                EditorGUILayout.PropertyField(_levelNameProp);
-            if (_sceneNameProp != null)
-                EditorGUILayout.PropertyField(_sceneNameProp);
 
             if (_thumbnailCache != null)
             {
@@ -72,6 +88,12 @@ namespace ElementalSiege.Editor
 
             EditorGUILayout.Space(4);
 
+            // ── Gameplay section ─────────────────────────────────────
+            EditorGUILayout.LabelField("Gameplay", EditorStyles.boldLabel);
+
+            if (_difficultyProp != null)
+                EditorGUILayout.PropertyField(_difficultyProp, new GUIContent("Difficulty"));
+
             // ── Orb list ─────────────────────────────────────────────
             if (_orbList != null)
             {
@@ -80,12 +102,12 @@ namespace ElementalSiege.Editor
             else
             {
                 EditorGUILayout.HelpBox(
-                    "Add an 'orbs' list field to CoreLevelData to enable the reorderable list.",
+                    "Could not find '_availableOrbs' property on CoreLevelData.",
                     MessageType.Info);
             }
 
             // Validation: empty orb list
-            if (_orbsProp != null && _orbsProp.arraySize == 0)
+            if (_availableOrbsProp != null && _availableOrbsProp.arraySize == 0)
             {
                 EditorGUILayout.HelpBox(
                     "Orb list is empty! The player will have nothing to launch.",
@@ -97,16 +119,25 @@ namespace ElementalSiege.Editor
             // ── Star thresholds ──────────────────────────────────────
             EditorGUILayout.LabelField("Star Thresholds", EditorStyles.boldLabel);
 
-            if (_star1Prop != null) EditorGUILayout.PropertyField(_star1Prop, new GUIContent("1 Star"));
-            if (_star2Prop != null) EditorGUILayout.PropertyField(_star2Prop, new GUIContent("2 Stars"));
-            if (_star3Prop != null) EditorGUILayout.PropertyField(_star3Prop, new GUIContent("3 Stars"));
-
-            // Validation: out of order
-            if (_star1Prop != null && _star2Prop != null && _star3Prop != null)
+            if (_starThresholdsProp != null)
             {
-                int s1 = _star1Prop.intValue;
-                int s2 = _star2Prop.intValue;
-                int s3 = _star3Prop.intValue;
+                // Ensure array has exactly 3 elements
+                if (_starThresholdsProp.arraySize != 3)
+                {
+                    _starThresholdsProp.arraySize = 3;
+                }
+
+                var s1Prop = _starThresholdsProp.GetArrayElementAtIndex(0);
+                var s2Prop = _starThresholdsProp.GetArrayElementAtIndex(1);
+                var s3Prop = _starThresholdsProp.GetArrayElementAtIndex(2);
+
+                EditorGUILayout.PropertyField(s1Prop, new GUIContent("1 Star"));
+                EditorGUILayout.PropertyField(s2Prop, new GUIContent("2 Stars"));
+                EditorGUILayout.PropertyField(s3Prop, new GUIContent("3 Stars"));
+
+                int s1 = s1Prop.intValue;
+                int s2 = s2Prop.intValue;
+                int s3 = s3Prop.intValue;
 
                 if (s1 >= s2 || s2 >= s3)
                 {
@@ -124,6 +155,22 @@ namespace ElementalSiege.Editor
 
                 EditorGUILayout.LabelField("Estimated Difficulty", difficulty);
             }
+
+            EditorGUILayout.Space(4);
+
+            // ── Layout section ───────────────────────────────────────
+            EditorGUILayout.LabelField("Layout", EditorStyles.boldLabel);
+            if (_levelBoundsProp != null)
+                EditorGUILayout.PropertyField(_levelBoundsProp, new GUIContent("Level Bounds"));
+
+            EditorGUILayout.Space(4);
+
+            // ── Tutorial section ─────────────────────────────────────
+            EditorGUILayout.LabelField("Tutorial", EditorStyles.boldLabel);
+            if (_tutorialIdProp != null)
+                EditorGUILayout.PropertyField(_tutorialIdProp, new GUIContent("Tutorial ID"));
+
+            EditorGUILayout.LabelField("Has Tutorial", levelData.HasTutorial.ToString());
 
             EditorGUILayout.Space(8);
 
@@ -158,14 +205,14 @@ namespace ElementalSiege.Editor
 
         private void DrawOrbElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            if (_orbsProp == null || index >= _orbsProp.arraySize)
+            if (_availableOrbsProp == null || index >= _availableOrbsProp.arraySize)
                 return;
 
-            var element = _orbsProp.GetArrayElementAtIndex(index);
+            var element = _availableOrbsProp.GetArrayElementAtIndex(index);
             rect.y += 2;
             rect.height = EditorGUIUtility.singleLineHeight;
 
-            // Element icon placeholder (colour dot)
+            // Element icon placeholder (colour dot based on ElementCategory)
             Rect iconRect = new Rect(rect.x, rect.y, 16, 16);
             EditorGUI.DrawRect(iconRect, GetOrbColor(index));
 
@@ -178,28 +225,16 @@ namespace ElementalSiege.Editor
         {
             Color[] palette =
             {
-                new Color(1f, 0.3f, 0.1f),   // Fire
+                new Color(0.6f, 0.4f, 0.2f),  // Stone
+                new Color(1f, 0.3f, 0.1f),    // Fire
                 new Color(0.4f, 0.8f, 1f),    // Ice
                 new Color(1f, 1f, 0.3f),      // Lightning
-                new Color(0.6f, 0.4f, 0.2f),  // Earth
                 new Color(0.7f, 1f, 0.7f),    // Wind
-                new Color(0.2f, 0.4f, 1f),    // Water
+                new Color(0.9f, 0.5f, 0.9f),  // Crystal
+                new Color(0.5f, 0.3f, 0.7f),  // Gravity
+                new Color(0.3f, 0.1f, 0.4f),  // Void
             };
             return palette[index % palette.Length];
         }
-    }
-
-    // ══════════════════════════════════════════════════════════════════
-    // Stub runtime type — replace with the real CoreLevelData
-    // ══════════════════════════════════════════════════════════════════
-
-    public class CoreLevelData : ScriptableObject
-    {
-        public string levelName = "Untitled Level";
-        public string sceneName;
-        public List<Object> orbs = new List<Object>();
-        public int starThreshold1 = 1000;
-        public int starThreshold2 = 3000;
-        public int starThreshold3 = 5000;
     }
 }
