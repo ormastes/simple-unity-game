@@ -1,0 +1,26 @@
+{
+    "name": "ElementalSiege.Tests.PlayMode",
+    "rootNamespace": "ElementalSiege.Tests.PlayMode",
+    "references": [
+        "ElementalSiege.Utilities",
+        "ElementalSiege.Core",
+        "ElementalSiege.Elements",
+        "ElementalSiege.Orbs",
+        "ElementalSiege.Structures",
+        "ElementalSiege.Environment",
+        "ElementalSiege.Launcher",
+        "ElementalSiege.Camera",
+        "ElementalSiege.UI",
+        "ElementalSiege.Guardians",
+        "ElementalSiege.VFX"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,26 @@
+{
+    "name": "ElementalSiege.Editor",
+    "rootNamespace": "ElementalSiege.Editor",
+    "references": [
+        "ElementalSiege.Utilities",
+        "ElementalSiege.Core",
+        "ElementalSiege.Elements",
+        "ElementalSiege.Orbs",
+        "ElementalSiege.Structures",
+        "ElementalSiege.Environment",
+        "ElementalSiege.Launcher",
+        "ElementalSiege.Camera",
+        "ElementalSiege.UI",
+        "ElementalSiege.Guardians",
+        "ElementalSiege.VFX"
+    ],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,120 @@
+name: Release Elemental Siege
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-mac:
+    name: Build Mac Standalone
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: .
+          targetPlatform: StandaloneOSX
+          unityVersion: 6000.0.23f1
+          buildName: ElementalSiege
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-mac
+          path: build/StandaloneOSX
+
+  build-ios:
+    name: Build iOS (Xcode Project)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: .
+          targetPlatform: iOS
+          unityVersion: 6000.0.23f1
+          buildName: ElementalSiege
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-ios-xcode
+          path: build/iOS
+
+  release:
+    name: Create GitHub Release
+    needs: [build-mac, build-ios]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" HEAD)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" "${PREVIOUS_TAG}..HEAD")
+          fi
+          echo "changelog<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGELOG" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-mac
+          path: artifacts/mac
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-ios-xcode
+          path: artifacts/ios
+
+      - name: Archive Mac build
+        run: |
+          cd artifacts/mac
+          zip -r ../../ElementalSiege-Mac-${{ github.ref_name }}.zip .
+
+      - name: Archive iOS build
+        run: |
+          cd artifacts/ios
+          zip -r ../../ElementalSiege-iOS-XcodeProject-${{ github.ref_name }}.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Elemental Siege ${{ github.ref_name }}
+          body: |
+            ## Elemental Siege ${{ github.ref_name }}
+
+            ### Changes
+            ${{ steps.changelog.outputs.changelog }}
+
+            ### Artifacts
+            - **Mac Standalone** — Ready-to-run macOS application
+            - **iOS Xcode Project** — Build in Xcode for device deployment
+          files: |
+            ElementalSiege-Mac-${{ github.ref_name }}.zip
+            ElementalSiege-iOS-XcodeProject-${{ github.ref_name }}.zip
+          draft: false
+          prerelease: false
